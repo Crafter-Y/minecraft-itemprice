@@ -6,13 +6,13 @@ This Web App allows you to monitor Itemprices on a Minecraft Server
 
 ## Setting up the Environment Variables
 
-SetEnv DB_DRIVER mysqli
-SetEnv DB_HOST localhost
-SetEnv DB_LOGIN root
-SetEnv DB_PASSWORD ""
-SetEnv DB_DATABASE forum
-SetEnv DB_PREFIX ""
-SetEnv DB_ENCODING ""
+- SetEnv DB_DRIVER mysqli
+- SetEnv DB_HOST localhost
+- SetEnv DB_LOGIN root
+- SetEnv DB_PASSWORD ""
+- SetEnv DB_DATABASE forum
+- SetEnv DB_PREFIX ""
+- SetEnv DB_ENCODING ""
 
 ## Install dependencies for TailwindCSS
 
