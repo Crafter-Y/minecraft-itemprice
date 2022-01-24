@@ -16,19 +16,20 @@ This Web App allows you to monitor Itemprices on a Minecraft Server
 
 ## Install dependencies for TailwindCSS
 
-cd into vendors/Tailwind
-code`npm i`
+- cd into vendors/Tailwind
+- code`npm i`
 
 # Development
 
-cd into vendors/Tailwind
-code`npm run css`
+- cd into vendors/Tailwind
+- code`npm run css`
 
 # TODO
 
 - [x] Setting up a php app with the Kata Framework
 
-  - [ ] Initial Page to set Root Account
+- [x] Initial Page to set Root Account
+
   - [ ] Enable account verification for default users
   - [ ] Setup Databases and Tables
 
@@ -36,3 +37,4 @@ code`npm run css`
 - [ ] Panel to create Shops and Auctions
 - [ ] Main Page to view and Compare Auctions (listing of Items)
 - [ ] Page to analyse every Item
+- [ ] Secured API to Insert Auctions

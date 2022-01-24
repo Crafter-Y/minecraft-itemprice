@@ -1,0 +1,18 @@
+<div class="mt-12 w-full flex justify-center flex-wrap">
+    <h1 class="text-4xl font-bold w-full text-center">Initial Setup</h1>
+    <!-- TODO: Modal for Registration Errors missing -->
+    <form class="bg-gray-800 rounded-xl shadow-lg mt-6 px-6 py-4" method="POST">
+        <h2 class="text-2xl font-semibold">Setup the Root Account</h2>
+        <p class="text-2xs">This Account is needed to configure everything in the Future</p>
+        <input type="text" name="username" class="input input-bordered mt-4 w-full" placeholder="Username">
+        <input type="password" name="password1" class="input input-bordered mt-2 w-full" placeholder="Password">
+        <input type="password" name="password2" class="input input-bordered mt-2 w-full" placeholder="repeat Password">
+        <div class="flex w-full justify-center mt-2">
+            <input type="submit" value="Setup" class="w-1/2 btn btn-primary">
+        </div> 
+    </form>
+    <!-- TODO: Further options to check right at the beginning
+      - Default Permission Level (can an user view the main Site?)
+
+    -->
+</div>

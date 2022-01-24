@@ -1,0 +1,9 @@
+<div class="w-full flex items-center justify-center h-4/5">
+    <div class="bg-gray-600 rounded-xl shadow-lg px-6 py-4">
+        <h1 class="text-3xl font-bold text-center">Error!</h1>
+        <div class="alert alert-error text-center mt-6">The Database `<?php print($database); ?>` could not be Found.</div>
+        <p class="mt-4 text-center">Make sure to set the Environment Variable <span class="bg-gray-900 text-warning rounded-md py-1 px-2">DB_DATABASE</span> to an existing Database!</p>
+        <p class="mt-12 text-sm mb-2">I have fixed the Issue or reported it to an Administrator?</p>
+        <a href="/main/index"><button class="btn btn-outline">Back</button></a>
+    </div>
+</div> 
