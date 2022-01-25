@@ -10,8 +10,17 @@
 </head>
 
 <body class="bg-gray-700 min-h-screen">
-    <div class="navbar bg-gray-800">
-        <a href="/"><button class="btn btn-sm text-lg bg-gray-800">Home</button></a>
+    <div class="navbar bg-gray-800 justify-between">
+        <div class="gap-4">
+            <a href="/main/index"><button class="btn btn-sm text-lg bg-gray-800">Home</button></a>
+            <a href="/admin/index"><button class="btn btn-sm text-lg bg-gray-800">Admin Panel</button></a>
+        </div>
+        <div class="gap-4">
+            <?php if (isset($loggedIn) && $loggedIn) { ?>
+                <p class="text-xl"><?php echo $username; ?></p>
+                <a href="/main/logout"><button class="btn btn-sm text-lg bg-gray-800">Logout</button></a>
+            <?php } ?>
+        </div>
     </div>
     <?= $content_for_layout ?>
 </body>

@@ -1,8 +1,16 @@
 <?php
 class MainController extends AppController
 {
-    public $uses = array("Lifecycle");
+    public $uses = array("Lifecycle", "Auth");
     public $components = array('Session');
+
+    public function beforeAction() {
+        parent::beforeAction();
+
+        $this->set("loggedIn", $this->Session->read("loggedIn"));
+        $this->set("username", $this->Session->read("username"));
+        $this->set("role", $this->Session->read("role"));
+    }
 
     public function index()
     {
@@ -43,7 +51,7 @@ class MainController extends AppController
             if (preg_match("/^[a-zA-Z_\-0-9]{5,24}$/", $username) == 1) {
                 if ($password1 == $password2) {
                     if (preg_match("/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/", $password1) == 1) {   
-                        $this->Lifecycle->createRootAccount($username, $password1);
+                        $this->Auth->createRootAccount($username, $password1);
                         $this->Session->write("role", "root");
                         $this->Session->write("username", $username);
                         $this->Session->write("loggedIn", true);
@@ -58,6 +66,11 @@ class MainController extends AppController
                 $this->set("error", "Username must be between 5 and 24 characters long and contain only letters, numbers and _-");
             }
         }
+    }
+
+    public function logout() {
+        $this->Session->destroy();
+        $this->redirect("main/index");
     }
    
 }

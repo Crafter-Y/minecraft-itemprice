@@ -1,0 +1,9 @@
+<div class="w-full flex justify-center mt-24 flex-wrap">
+    <h1 class="text-4xl font-semibold mb-6 text-center px-6 w-full">Welcome Back!</h1>
+    <form class="bg-gray-800 rounded-xl shadow-lg px-4 py-2" method="post">
+        <h2 class="w-full text-2xl text-center mb-2">Sign In</h2>
+        <input class="input text-lg w-full mb-2" name="username" type="text" placeholder="Username" /><br />
+        <input class="input text-lg w-full mb-3" name="password" type="password" placeholder="Password" /><br />
+        <input class="btn btn-info w-full" type="submit" value="Sign In">
+    </form>
+</div>
