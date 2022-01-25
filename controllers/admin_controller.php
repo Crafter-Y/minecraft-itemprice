@@ -54,4 +54,38 @@ class AdminController extends AppController
         }
     }
 
+    public function rootPanel() {
+        if ($this->Session->read("role") != "root") {
+            $this->redirect("admin/index");
+        }
+        if (isset($this->params["form"])) {
+            $username = $this->params["form"]["username"];
+            $password1 = $this->params["form"]["password1"];
+            $password2 = $this->params["form"]["password2"];
+            $role = $this->params["form"]["role"];
+            if (preg_match("/^[a-zA-Z_\-0-9]{5,24}$/", $username) == 1) {
+                if ($password1 == $password2) {
+                    if (preg_match("/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/", $password1) == 1) {   
+                        if (preg_match("/^user|admin|root$/", $role) == 1) {
+                            try {
+                                $this->Auth->createAccount($username, $password1, $role);
+                                $this->set("success", "Account created!");
+                            } catch (Exception $e) {
+                                $this->set("error", "Ts Account is already existing!");
+                            }
+                        } else {
+                            $this->set("error", "You need to specify a role.");
+                        }
+                    } else {
+                        $this->set("error", "Password must be at least 7 characters long and can only contain the following characters: a-Z, 0-9, _, -, !, §, $, %, &, /, (, ), =, ?, +, #, _");
+                    }
+                } else {
+                    $this->set("error", "Passwords do not match");
+                }
+            } else {
+                $this->set("error", "Username must be between 5 and 24 characters long and contain only letters, numbers and _-");
+            }
+        }
+    }
+
 }

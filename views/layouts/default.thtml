@@ -18,6 +18,9 @@
         <div class="gap-4">
             <?php if (isset($loggedIn) && $loggedIn) { ?>
                 <p class="text-xl"><?php echo $username; ?></p>
+                <?php if ($role == "root") {?>
+                    <a href="/admin/rootPanel"><button class="btn btn-sm text-lg bg-gray-800">Page Settings</button></a>
+                <?php } ?>
                 <a href="/main/logout"><button class="btn btn-sm text-lg bg-gray-800">Logout</button></a>
             <?php } ?>
         </div>

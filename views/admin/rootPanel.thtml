@@ -1,0 +1,30 @@
+<div class="w-full flex justify-center mt-24 flex-wrap">
+    <form class="bg-gray-800 rounded-xl shadow-lg px-4 py-2" method="post">
+        <h2 class="w-full text-3xl text-center mb-2">Create Account</h2>
+        <?php if (isset($error)) { ?>
+            <div class="w-full flex justify-center mt-4">
+                <div class="alert alert-error w-full">
+                    <?php echo $error; ?>
+                </div>
+            </div>
+        <?php } ?>
+        <p class="mt-4 text-xs">You can create Accounts to give other People access to specific regions</p>
+        <select name="role" class="select w-full text-lg mt-1">
+            <option disabled="disabled" selected="selected">Choose role</option> 
+            <option value="root">Root</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select>
+        <input class="input text-lg w-full mb-2 mt-2" name="username" type="text" placeholder="Username" /><br />
+        <input class="input text-lg w-full mb-2" name="password1" type="password" placeholder="Password" /><br />
+        <input class="input text-lg w-full mb-3" name="password2" type="password" placeholder="repeat Password" /><br />
+        <input class="btn btn-info w-full" type="submit" value="Create Account">
+        <?php if (isset($success)) { ?>
+            <div class="w-full flex justify-center mt-4">
+                <div class="alert alert-success w-full">
+                    <?php echo $success; ?>
+                </div>
+            </div>
+        <?php } ?>
+    </form>
+</div>
