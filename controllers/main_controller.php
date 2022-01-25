@@ -2,6 +2,7 @@
 class MainController extends AppController
 {
     public $uses = array("Lifecycle");
+    public $components = array('Session');
 
     public function index()
     {
@@ -34,9 +35,28 @@ class MainController extends AppController
         } catch (Exception $e) {
             $this->redirect("main/databaseNotFound");
         }
+        $this->set("error", false);
         if (isset($this->params["form"])) {
-            // TODO: implement creating the root account
-            var_dump($this->params["form"]);
+            $username = $this->params["form"]["username"];
+            $password1 = $this->params["form"]["password1"];
+            $password2 = $this->params["form"]["password2"];
+            if (preg_match("/^[a-zA-Z_\-0-9]{5,24}$/", $username) == 1) {
+                if ($password1 == $password2) {
+                    if (preg_match("/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/", $password1) == 1) {   
+                        $this->Lifecycle->createRootAccount($username, $password1);
+                        $this->Session->write("role", "root");
+                        $this->Session->write("username", $username);
+                        $this->Session->write("loggedIn", true);
+                        $this->redirect("main/index");
+                    } else {
+                        $this->set("error", "Password must be at least 7 characters long and can only contain the following characters: a-Z, 0-9, _, -, !, §, $, %, &, /, (, ), =, ?, +, #, _");
+                    }
+                } else {
+                    $this->set("error", "Passwords do not match");
+                }
+            } else {
+                $this->set("error", "Username must be between 5 and 24 characters long and contain only letters, numbers and _-");
+            }
         }
     }
    
