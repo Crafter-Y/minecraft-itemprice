@@ -16,13 +16,19 @@ This Web App allows you to monitor Itemprices on a Minecraft Server
 
 ## Install dependencies for TailwindCSS
 
-- cd into vendors/Tailwind
-- code`npm i`
+cd into vendors/Tailwind
+
+```bash
+npm i
+```
 
 # Development
 
-- cd into vendors/Tailwind
-- code`npm run css`
+cd into vendors/Tailwind
+
+```bash
+npm run css
+```
 
 # TODO
 
