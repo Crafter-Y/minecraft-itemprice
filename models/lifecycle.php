@@ -37,8 +37,7 @@ class Lifecycle extends AppModel
             )");
             return array();
         }
-        $res = $this->query("SELECT * FROM shops");
-        // TODO: join auction count 
+        $res = $this->query("SELECT shops.name, shops.id, shops.description, shops.creator, shops.owner, COUNT(auctions.id) FROM shops LEFT JOIN auctions On shops.id = auctions.shopId GROUP BY shops.name");
         return $res;
     }
 
@@ -47,12 +46,58 @@ class Lifecycle extends AppModel
         
     }
 
-    public function getShop($id) {
-        // TODO: join auctions
+    public function getShop($id, $searchQuery) {
         $res = $this->query("SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'");
         if (count($res) == 0) {
             return false;
         }
+
+        $res[0]["auctions"] = $this->getShopAuctions($id, $searchQuery);
         return $res[0];
+    }
+
+    private function cmp($key) {
+        return function ($a, $b) use ($key) {
+            return strcmp($a["item"], $b["item"]);
+        };
+    }
+
+    public function getShopAuctions($shopId, $searchQuery) {
+        $res = $this->query("SHOW TABLES LIKE 'auctions'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE auctions (
+                id INT NOT NULL AUTO_INCREMENT,
+                item VARCHAR(64) NOT NULL,
+                price DOUBLE(20, 2) NOT NULL,
+                shopId INT NOT NULL,
+                creator INT NOT NULL,
+                amount INT NOT NULL,
+                PRIMARY KEY (id)
+            )");
+            return array();
+        }
+        $res = $this->query("SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'");
+        
+        if ($searchQuery) {
+            
+            $newres = array();
+            foreach ($res as $entry) {
+                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) === strtolower($searchQuery)) {
+                    array_push($newres, $entry);
+                }
+            }
+            usort($newres, $this->cmp('key_b'));
+            return $newres;
+        }
+        usort($res, $this->cmp('key_b'));
+        return $res;
+    }
+
+    public function createAuction($item, $price, $shopId, $creator, $amount) {
+        return $this->query("INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')");
+    }
+
+    public function deleteAuction($id) {
+        return $this->query("DELETE FROM auctions WHERE id = '$id'");
     }
 }

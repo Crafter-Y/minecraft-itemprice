@@ -37,10 +37,18 @@ npm run css
 - [x] Initial Page to set Root Account
 
   - [ ] Enable account verification for default users
-  - [ ] Setup Databases and Tables
+  - [x] Setup Databases and Tables
 
 - [x] Admin Panel to Create Accounts
-- [ ] Panel to create Shops and Auctions
+- [x] Panel to create Shops and Auctions
 - [ ] Main Page to view and Compare Auctions (listing of Items)
 - [ ] Page to analyse every Item
 - [ ] Secured API to Insert Auctions
+
+# Info
+
+## webroot/data/1-18-textures.json
+
+Got the Datalist from [PrismarineJS/minecraft-assets](https://github.com/PrismarineJS/minecraft-assets)
+
+[texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)

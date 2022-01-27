@@ -2,4 +2,88 @@
     <h1 class="text-4xl font-bold w-full text-center"><?php echo $shop["name"]; ?></h1>
     <h2 class="w-full text-center text-lg"><?php echo $shop["description"]; ?></h2>
     <p class="w-full text-center text-sm">Inhaber: <?php echo $shop["owner"]; ?> | Erstellt von: <?php echo $shop["username"] ?></p>
+
+    <div class="w-full flex justify-center mt-12 flex-wrap gap-4">
+        <form method="get" class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex gap-2 items-end flex-wrap justify-center">
+            <input type="text" name="search" class="input text-lg" placeholder="Search..">
+            <input type="submit" class="btn text-lg" value="Search">
+        </form> 
+        <form method="post" class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex gap-2 items-end flex-wrap justify-center">
+            <div>
+                <p class="text-xs">Choose Item</p>
+                <select name="item" class="select text-lg w-64" id="selectList" required>
+                    <option hidden="hidden" selected="selected" value="">Choose Item</option> 
+                    </select>
+                </div>
+
+                <div>
+                    <p class="text-xs">Amount</p>
+                    <input type="number" name="amount" class="input text-lg w-24" min="1" max="1728" value="1">
+                </div>
+
+                <div>
+                    <p class="text-xs">Price</p>
+                    <input type="number" name="price" class="input text-lg w-48" min="0" max="1000000000" value="1">
+                </div>
+                
+                <div class="flex items-end">
+                    <input type="submit" class="btn text-lg" name="form2" value="Add Auction">
+                </div>  
+            </div>
+        </form> 
+    </div>
+    
+    <?php if (isset($success)) { ?>
+        <div class="w-full flex justify-center mt-4">
+            <div class="alert alert-success">
+                <?php echo $success; ?>
+            </div>
+        </div>
+    <?php } ?>
+    <?php if (isset($error)) { ?>
+        <div class="w-full flex justify-center mt-4">
+            <div class="alert alert-success"> 
+                <?php echo $error; ?>
+            </div>
+        </div>
+    <?php } ?>
+    <?php if(count($shop["auctions"])) { ?>
+        <!-- Auctions: -->
+        <div class="w-full flex justify-center mt-4 pb-10">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th></th> 
+                        <th class="text-lg">Item</th> 
+                        <th class="text-lg">Amount</th> 
+                        <th class="text-lg">Price</th>
+                        <th class="text-lg">per 1pcs.</th>
+                        <th class="text-lg">per Stack</th>
+                        <th></th> 
+                    </tr>
+                </thead> 
+                <tbody id="table">
+                    <?php foreach ($shop["auctions"] as $auction) { ?>
+                    <tr>
+                        <td></td> 
+                        <td class="text-lg"><?php echo $auction["item"]; ?></td> 
+                        <td class="text-lg"><?php echo $auction["amount"]; ?></td> 
+                        <td class="text-lg"><?php echo $auction["price"]; ?></td>
+                        <td class="text-lg"><?php echo $auction["price"]/$auction["amount"] ?></td>
+                        <td class="text-lg"><?php echo $auction["price"]/$auction["amount"]*64 ?></td>
+                        <td>
+                            <form method="post" class="flex justify-center m-0">
+                                <input type="hidden" name="auctionId" value="<?php echo $auction["id"]; ?>">
+                                <input type="submit" class="btn text-lg btn-error" name="form3" value="Delete">
+                            </form>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    <?php } else { ?>
+        <p class="w-full text-2xl text-center mt-6">This Shop has no Auctions yet.</p>
+    <?php } ?>
 </div>
+<script src="/js/selectList.js"></script>

@@ -100,16 +100,41 @@ class AdminController extends AppController
     }
 
     public function editShop($shopId = false) {
+        $searchQuery = false;
         if (!$this->checkLoggedIn()) {
             $this->redirect("admin/login");
         }
         if (!$shopId) {
             $this->redirect("admin/index");
         }
-
-        $shop = $this->Lifecycle->getShop($shopId);
+        
+        if (isset($this->params["url"]["search"]) && $this->params["url"]["search"]) {
+            $searchQuery = $this->params["url"]["search"];
+        }
+        $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
         if (!$shop) {
             $this->redirect("admin/index");
+        }
+
+        if (isset($this->params["form"]["form2"])) {
+            $item = $this->params["form"]["item"];
+            $price = $this->params["form"]["price"];
+            $amount = $this->params["form"]["amount"];
+            $creator = $this->Session->read("userId");
+
+            if ($item == "Choose Item") {
+                $this->set("error", "Please choose an item.");
+            } else {   
+                $this->Lifecycle->createAuction($item, $price, $shopId, $creator, $amount);
+                $this->set("success", "Auction Created!");
+                $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
+            }
+        }
+
+        if (isset($this->params["form"]["form3"])) {
+            $auctionId = $this->params["form"]["auctionId"];
+            $this->Lifecycle->deleteAuction($auctionId);
+            $shop = $this->Lifecycle->getShop($shopId, $searchQuery); 
         }
         $this->set("shop", $shop);
     }

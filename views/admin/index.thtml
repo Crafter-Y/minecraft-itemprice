@@ -28,8 +28,7 @@
                 </td>
                 <td>
                     <a href="/admin/editShop/<?php echo $shop["id"] ?>">
-                    <!-- TODO: Add Auction Count -->
-                    <?php echo "-" ?>
+                    <?php echo $shop["COUNT(auctions.id)"]; ?>
                     </a>
                 </td>
                 <td>

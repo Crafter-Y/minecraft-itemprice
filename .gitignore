@@ -5,3 +5,5 @@ tmp/
 webroot/css/style.css
 
 .vscode/
+
+.VSCodeCounter/
