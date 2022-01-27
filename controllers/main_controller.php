@@ -51,9 +51,10 @@ class MainController extends AppController
             if (preg_match("/^[a-zA-Z_\-0-9]{5,24}$/", $username) == 1) {
                 if ($password1 == $password2) {
                     if (preg_match("/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/", $password1) == 1) {   
-                        $this->Auth->createRootAccount($username, $password1);
+                        $res = $this->Auth->createRootAccount($username, $password1);
                         $this->Session->write("role", "root");
                         $this->Session->write("username", $username);
+                        $this->Session->write("userId", $res["id"]);
                         $this->Session->write("loggedIn", true);
                         $this->redirect("main/index");
                     } else {

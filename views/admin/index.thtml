@@ -1,1 +1,46 @@
-<h1>Hello world</h1>
+<div class="w-full flex justify-center mt-12 flex-wrap">
+    <h1 class="text-3xl font-bold w-full text-center">Shops</h1>
+    <?php if (count($shops) == 0) { ?>
+        <p class="text-xl font-bold text-center w-full mt-6">No shops found.</p>
+        <p>New Shops can be created in the Page Settings. You need Permisson Level `root` to create new shops.</p>
+    <?php } else { ?>
+    <table class="table table-zebra mt-6">
+        <thead>
+            <tr>
+                <th>Name</th> 
+                <th>Owner</th> 
+                <th>Auctions</th> 
+                <th>Labels</th>
+            </tr>
+        </thead> 
+        <tbody>
+            <?php foreach ($shops as $shop) { ?>
+            <tr>  
+                <th>
+                    <a href="/admin/editShop/<?php echo $shop["id"] ?>">
+                    <?php echo $shop["name"] ?>
+                    </a>
+                </th> 
+                <td>
+                    <a href="/admin/editShop/<?php echo $shop["id"] ?>">
+                    <?php echo $shop["owner"] ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="/admin/editShop/<?php echo $shop["id"] ?>">
+                    <!-- TODO: Add Auction Count -->
+                    <?php echo "-" ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="/admin/editShop/<?php echo $shop["id"] ?>">
+                    <!-- TODO: Add Label View -->
+                    <?php echo "-" ?>
+                    </a>
+                </td>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
+    <?php } ?>
+</div> 

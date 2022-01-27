@@ -22,4 +22,37 @@ class Lifecycle extends AppModel
         }
         return true;
     }
+
+    public function getShops() {
+        $res = $this->query("SHOW TABLES LIKE 'shops'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE shops (
+                id INT NOT NULL AUTO_INCREMENT,
+                name VARCHAR(64) NOT NULL,
+                description TEXT NOT NULL,
+                creator int NOT NULL,
+                owner varchar(24) NOT NULL,
+                PRIMARY KEY (id),
+                UNIQUE (name)
+            )");
+            return array();
+        }
+        $res = $this->query("SELECT * FROM shops");
+        // TODO: join auction count 
+        return $res;
+    }
+
+    public function createShop($name, $description, $creator, $owner) {
+        return $this->query("INSERT INTO shops (name, description, creator, owner) VALUES ('$name', '$description', '$creator', '$owner')");
+        
+    }
+
+    public function getShop($id) {
+        // TODO: join auctions
+        $res = $this->query("SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'");
+        if (count($res) == 0) {
+            return false;
+        }
+        return $res[0];
+    }
 }

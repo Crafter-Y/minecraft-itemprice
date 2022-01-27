@@ -39,7 +39,7 @@ npm run css
   - [ ] Enable account verification for default users
   - [ ] Setup Databases and Tables
 
-- [ ] Admin Panel to Create Accounts
+- [x] Admin Panel to Create Accounts
 - [ ] Panel to create Shops and Auctions
 - [ ] Main Page to view and Compare Auctions (listing of Items)
 - [ ] Page to analyse every Item

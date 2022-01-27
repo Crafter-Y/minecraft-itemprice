@@ -1,0 +1,5 @@
+<div class="w-full flex mt-12 justify-center flex-wrap">
+    <h1 class="text-4xl font-bold w-full text-center"><?php echo $shop["name"]; ?></h1>
+    <h2 class="w-full text-center text-lg"><?php echo $shop["description"]; ?></h2>
+    <p class="w-full text-center text-sm">Inhaber: <?php echo $shop["owner"]; ?> | Erstellt von: <?php echo $shop["username"] ?></p>
+</div>

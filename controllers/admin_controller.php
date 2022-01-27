@@ -2,7 +2,7 @@
 class AdminController extends AppController
 {
     public $components = array('Session');
-    public $uses = array("Auth");
+    public $uses = array("Auth", "Lifecycle");
 
     public function beforeAction() {
         parent::beforeAction();
@@ -28,6 +28,7 @@ class AdminController extends AppController
         if (!$this->checkLoggedIn()) {
             $this->redirect("admin/login");
         }
+        $this->set("shops", $this->Lifecycle->getShops());
     }
 
     public function login() {
@@ -41,6 +42,7 @@ class AdminController extends AppController
             if ($res["success"]) {
                 $this->Session->write("role", $res["role"]);
                 $this->Session->write("username", $username);
+                $this->Session->write("userId", $res["id"]);
                 $this->Session->write("loggedIn", true);
                 
                 if ($this->checkLoggedIn()) {
@@ -58,7 +60,7 @@ class AdminController extends AppController
         if ($this->Session->read("role") != "root") {
             $this->redirect("admin/index");
         }
-        if (isset($this->params["form"])) {
+        if (isset($this->params["form"]["form1"])) {
             $username = $this->params["form"]["username"];
             $password1 = $this->params["form"]["password1"];
             $password2 = $this->params["form"]["password2"];
@@ -71,7 +73,7 @@ class AdminController extends AppController
                                 $this->Auth->createAccount($username, $password1, $role);
                                 $this->set("success", "Account created!");
                             } catch (Exception $e) {
-                                $this->set("error", "Ts Account is already existing!");
+                                $this->set("error", "This Account is already existing!");
                             }
                         } else {
                             $this->set("error", "You need to specify a role.");
@@ -86,6 +88,29 @@ class AdminController extends AppController
                 $this->set("error", "Username must be between 5 and 24 characters long and contain only letters, numbers and _-");
             }
         }
+
+        if (isset($this->params["form"]["form2"])) {
+            $name = $this->params["form"]["name"];
+            $description = $this->params["form"]["description"];
+            $owner = $this->params["form"]["owner"];
+            
+            $this->Lifecycle->createShop($name, $description, $this->Session->read("userId"), $owner);
+            $this->set("success2", "Shop created!");
+        }
     }
 
+    public function editShop($shopId = false) {
+        if (!$this->checkLoggedIn()) {
+            $this->redirect("admin/login");
+        }
+        if (!$shopId) {
+            $this->redirect("admin/index");
+        }
+
+        $shop = $this->Lifecycle->getShop($shopId);
+        if (!$shop) {
+            $this->redirect("admin/index");
+        }
+        $this->set("shop", $shop);
+    }
 }
