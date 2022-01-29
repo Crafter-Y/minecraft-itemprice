@@ -138,4 +138,15 @@ class AdminController extends AppController
         }
         $this->set("shop", $shop);
     }
+
+    public function hardReset() {
+        if (!$this->checkLoggedIn()) {
+            $this->redirect("admin/login");
+        }
+        if ($this->Session->read("role") != "root") {
+            $this->redirect("admin/index");
+        }
+        $this->Lifecycle->hardReset();
+        $this->redirect("main/initialSetup");
+    }
 }

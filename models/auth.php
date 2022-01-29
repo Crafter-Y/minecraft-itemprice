@@ -32,17 +32,6 @@ class Auth extends AppModel
     }
 
     public function createAccount (String $username, String $password, String $role) {
-        $res = $this->query("SHOW TABLES LIKE 'users'");
-        if (count($res) == 0) {
-            $this->query("CREATE TABLE users (
-                id INT NOT NULL AUTO_INCREMENT,
-                username VARCHAR(24) NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                role VARCHAR(24) NOT NULL,
-                PRIMARY KEY (id),
-                UNIQUE (username)
-            )");
-        }
         $this->query("INSERT INTO users (username, password, role) VALUES ('" . $username . "', '" . password_hash($password, PASSWORD_DEFAULT) . "', '" . $role . "')");
         return $this->query("SELECT id FROM users WHERE username = '" . $username . "'");
     }

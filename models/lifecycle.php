@@ -2,7 +2,7 @@
 
 class Lifecycle extends AppModel
 {
-    public function getInitialInformationTable() {
+    private function checkShopSchemaTable() {
         $res = $this->query("SHOW TABLES LIKE 'shop_schema'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE shop_schema (
@@ -12,6 +12,64 @@ class Lifecycle extends AppModel
             $this->query("INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')");
             return false;
         }
+        return true;
+    }
+
+    private function checkShopsTable() {
+        $res = $this->query("SHOW TABLES LIKE 'shops'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE shops (
+                id INT NOT NULL AUTO_INCREMENT,
+                name VARCHAR(64) NOT NULL,
+                description TEXT NOT NULL,
+                creator int NOT NULL,
+                owner varchar(24) NOT NULL,
+                PRIMARY KEY (id),
+                UNIQUE (name)
+            )");
+            return false;
+        }
+        return true;
+    }
+
+    private function checkAuctionsTable() {
+        $res = $this->query("SHOW TABLES LIKE 'auctions'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE auctions (
+                id INT NOT NULL AUTO_INCREMENT,
+                item VARCHAR(64) NOT NULL,
+                price DOUBLE(20, 2) NOT NULL,
+                shopId INT NOT NULL,
+                creator INT NOT NULL,
+                amount INT NOT NULL,
+                PRIMARY KEY (id)
+            )");
+            return false;
+        }
+        return true;
+    }
+
+    private function checkUsersTable() {
+        $res = $this->query("SHOW TABLES LIKE 'users'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE users (
+                id INT NOT NULL AUTO_INCREMENT,
+                username VARCHAR(24) NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                role VARCHAR(24) NOT NULL,
+                PRIMARY KEY (id),
+                UNIQUE (username)
+            )");
+            return false;
+        }
+        return true;
+    }
+
+    public function getInitialInformationTable() {
+        $this->checkShopSchemaTable();
+        $this->checkShopsTable();
+        $this->checkAuctionsTable();
+        $this->checkUsersTable();
         $res = $this->query("SELECT v FROM shop_schema WHERE k = 'rootAccountCreated'");
         if (count($res) == 0) {
             $this->query("INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')");
@@ -24,29 +82,20 @@ class Lifecycle extends AppModel
     }
 
     public function getShops() {
-        $res = $this->query("SHOW TABLES LIKE 'shops'");
-        if (count($res) == 0) {
-            $this->query("CREATE TABLE shops (
-                id INT NOT NULL AUTO_INCREMENT,
-                name VARCHAR(64) NOT NULL,
-                description TEXT NOT NULL,
-                creator int NOT NULL,
-                owner varchar(24) NOT NULL,
-                PRIMARY KEY (id),
-                UNIQUE (name)
-            )");
-            return array();
-        }
+        $this->checkShopsTable();
+        $this->checkAuctionsTable();
         $res = $this->query("SELECT shops.name, shops.id, shops.description, shops.creator, shops.owner, COUNT(auctions.id) FROM shops LEFT JOIN auctions On shops.id = auctions.shopId GROUP BY shops.name");
         return $res;
     }
 
     public function createShop($name, $description, $creator, $owner) {
+        $this->checkShopsTable();
         return $this->query("INSERT INTO shops (name, description, creator, owner) VALUES ('$name', '$description', '$creator', '$owner')");
-        
     }
 
     public function getShop($id, $searchQuery) {
+        $this->checkShopsTable();
+        $this->checkUsersTable();
         $res = $this->query("SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'");
         if (count($res) == 0) {
             return false;
@@ -63,19 +112,7 @@ class Lifecycle extends AppModel
     }
 
     public function getShopAuctions($shopId, $searchQuery) {
-        $res = $this->query("SHOW TABLES LIKE 'auctions'");
-        if (count($res) == 0) {
-            $this->query("CREATE TABLE auctions (
-                id INT NOT NULL AUTO_INCREMENT,
-                item VARCHAR(64) NOT NULL,
-                price DOUBLE(20, 2) NOT NULL,
-                shopId INT NOT NULL,
-                creator INT NOT NULL,
-                amount INT NOT NULL,
-                PRIMARY KEY (id)
-            )");
-            return array();
-        }
+        $this->checkAuctionsTable();
         $res = $this->query("SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'");
         
         if ($searchQuery) {
@@ -94,10 +131,21 @@ class Lifecycle extends AppModel
     }
 
     public function createAuction($item, $price, $shopId, $creator, $amount) {
+        $this->checkAuctionsTable();
         return $this->query("INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')");
     }
 
     public function deleteAuction($id) {
+        $this->checkAuctionsTable();
         return $this->query("DELETE FROM auctions WHERE id = '$id'");
+    }
+
+    public function hardReset() {
+        // this function should be used only for testing purposes
+        // this function should completely reset the database and delete all tables
+        $this->query("DROP TABLE auctions");
+        $this->query("DROP TABLE shops");
+        $this->query("DROP TABLE users");
+        $this->query("DROP TABLE shop_schema");
     }
 }

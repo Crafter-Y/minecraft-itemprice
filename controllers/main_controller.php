@@ -54,7 +54,7 @@ class MainController extends AppController
                         $res = $this->Auth->createRootAccount($username, $password1);
                         $this->Session->write("role", "root");
                         $this->Session->write("username", $username);
-                        $this->Session->write("userId", $res["id"]);
+                        $this->Session->write("userId", $res[0]["id"]);
                         $this->Session->write("loggedIn", true);
                         $this->redirect("main/index");
                     } else {
