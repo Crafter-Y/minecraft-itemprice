@@ -36,7 +36,7 @@ npm run css
 
 - [x] Initial Page to set Root Account
 
-  - [ ] Enable account verification for default users
+  - [x] Enable account verification for default users
   - [x] Setup Databases and Tables
 
 - [x] Admin Panel to Create Accounts
@@ -52,3 +52,7 @@ npm run css
 Got the Datalist from [PrismarineJS/minecraft-assets](https://github.com/PrismarineJS/minecraft-assets)
 
 [texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)
+
+# Contribute
+
+Contirbutions are closed for now.

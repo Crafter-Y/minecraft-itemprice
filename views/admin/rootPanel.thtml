@@ -52,5 +52,17 @@
         </form>
         
     </div>
+    <div class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 mt-6 flex flex-wrap mb-10">
+        <h2 class="text-3xl font-semibold w-full text-center">Page Settings</h2>
+        <form method="post" class="flex flex-wrap">
+            <div class="w-full mt-4 flex items-center">
+                <span class="mr-2">Should non-Authenticated Users have access to the main Controller? </span>
+                <input type="checkbox" name="defaultUserAccess" <?php if($defaultUserAccess) echo "checked='checked'" ?> class="toggle">
+            </div>
+           
+            <input type="submit" name="form3" value="Save Settings" class="btn btn-lg btn-info mt-4">
+        </form>
+        
+    </div>
 
 </div>

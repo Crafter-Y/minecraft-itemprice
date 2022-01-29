@@ -10,6 +10,10 @@ class MainController extends AppController
         $this->set("loggedIn", $this->Session->read("loggedIn"));
         $this->set("username", $this->Session->read("username"));
         $this->set("role", $this->Session->read("role"));
+
+        if (!$this->Lifecycle->isDefaultUserAllowedToViewMainController() && !$this->Session->read("loggedIn")) {
+            $this->redirect("auth/login");
+        }
     }
 
     public function index()

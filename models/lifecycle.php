@@ -148,4 +148,21 @@ class Lifecycle extends AppModel
         $this->query("DROP TABLE users");
         $this->query("DROP TABLE shop_schema");
     }
+
+    public function isDefaultUserAllowedToViewMainController() {
+        $res = $this->query("SELECT v FROM shop_schema WHERE k = 'defaultUserAccess'");
+        if (count($res) == 0) {
+            $this->query("INSERT INTO shop_schema (k, v) VALUES ('defaultUserAccess', '0')");
+            return false;
+        }
+        if ($res[0]["v"] == "0") {
+            return false;
+        }
+        return true;
+    }
+
+    public function setDefaultUserAccess($value) {
+        $value = $value ? "1" : "0";
+        $this->query("UPDATE shop_schema SET v = '$value' WHERE k = 'defaultUserAccess'");
+    }
 }

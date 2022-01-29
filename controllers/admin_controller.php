@@ -97,6 +97,12 @@ class AdminController extends AppController
             $this->Lifecycle->createShop($name, $description, $this->Session->read("userId"), $owner);
             $this->set("success2", "Shop created!");
         }
+
+        if (isset($this->params["form"]["form3"])) {
+            $defaultUserAccess = isset($this->params["form"]["defaultUserAccess"]);
+            $this->Lifecycle->setDefaultUserAccess($defaultUserAccess);
+        }
+        $this->set("defaultUserAccess", $this->Lifecycle->isDefaultUserAllowedToViewMainController());
     }
 
     public function editShop($shopId = false) {
