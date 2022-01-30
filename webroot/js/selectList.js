@@ -41,8 +41,6 @@ const main = async () => {
                 node.cells[5].innerText = formatPrice(node.cells[5].innerText)
             }
 
-            //let item = node.firstChild.childNodes[1].textContent;
-            //node.firstChild.childNodes[0].textContent = item;
         })
     }
 }

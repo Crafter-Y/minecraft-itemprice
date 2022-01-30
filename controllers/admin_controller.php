@@ -116,6 +116,7 @@ class AdminController extends AppController
         
         if (isset($this->params["url"]["search"]) && $this->params["url"]["search"]) {
             $searchQuery = $this->params["url"]["search"];
+            $this->set("searchQuery", $searchQuery);
         }
         $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
         if (!$shop) {

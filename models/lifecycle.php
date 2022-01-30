@@ -65,6 +65,17 @@ class Lifecycle extends AppModel
         return true;
     }
 
+    private function checkTrendingTable() {
+        $res = $this->query("SHOW TABLES LIKE 'trending'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE trending (
+                item VARCHAR(64) NOT NULL,
+                count INT NOT NULL,
+                minPrice DOUBLE(20, 2) NOT NULL
+            )");
+        }
+    }
+
     public function getInitialInformationTable() {
         $this->checkShopSchemaTable();
         $this->checkShopsTable();
@@ -105,7 +116,7 @@ class Lifecycle extends AppModel
         return $res[0];
     }
 
-    private function cmp($key) {
+    private function cmp_item($key) {
         return function ($a, $b) use ($key) {
             return strcmp($a["item"], $b["item"]);
         };
@@ -116,23 +127,27 @@ class Lifecycle extends AppModel
         $res = $this->query("SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'");
         
         if ($searchQuery) {
-            
+            $searchQuery = str_replace(" ", "_", $searchQuery);
             $newres = array();
             foreach ($res as $entry) {
-                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) === strtolower($searchQuery)) {
+                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) == strtolower($searchQuery)) {
                     array_push($newres, $entry);
                 }
             }
-            usort($newres, $this->cmp('key_b'));
+            usort($newres, $this->cmp_item('key_b'));
             return $newres;
         }
-        usort($res, $this->cmp('key_b'));
+        usort($res, $this->cmp_item('key_b'));
         return $res;
     }
 
     public function createAuction($item, $price, $shopId, $creator, $amount) {
         $this->checkAuctionsTable();
-        return $this->query("INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')");
+        $res = $this->query("INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')");
+
+        $this->updateTrendingCache();
+
+        return $res;
     }
 
     public function deleteAuction($id) {
@@ -164,5 +179,47 @@ class Lifecycle extends AppModel
     public function setDefaultUserAccess($value) {
         $value = $value ? "1" : "0";
         $this->query("UPDATE shop_schema SET v = '$value' WHERE k = 'defaultUserAccess'");
+    }
+
+    private function updateTrendingCache() {
+        $this->checkTrendingTable();
+        $this->query("TRUNCATE TABLE trending");
+        $res = $this->query("SELECT item, COUNT(item) AS count, MIN(price / amount) AS minPrice FROM `auctions` GROUP BY item");
+        foreach ($res as $entry) {
+            $this->query("INSERT INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')");
+        }
+    }
+
+    private function cmp_count($key) {
+        return function ($a, $b) use ($key) {
+            return $a["count"] < $b["count"];
+        };
+    }
+
+    public function getTrending($sortation, $searchQuery) {
+        $this->checkTrendingTable();
+        $res = $this->query("SELECT * FROM trending");
+        if ($sortation) {
+            if ($sortation == "trending") {
+                usort($res, $this->cmp_count('key_b'));
+            } else if ($sortation == "alphanumerical") {
+                usort($res, $this->cmp_item('key_b'));
+            }
+        } else {
+            usort($res, $this->cmp_count('key_b'));
+        }
+
+        if ($searchQuery) {
+            $searchQuery = str_replace(" ", "_", $searchQuery);
+            $newres = array();
+            foreach ($res as $entry) {
+                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) == strtolower($searchQuery)) {
+                    array_push($newres, $entry);
+                }
+            }
+            return $newres;
+        }
+        
+        return $res;
     }
 }

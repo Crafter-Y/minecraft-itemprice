@@ -41,7 +41,7 @@ npm run css
 
 - [x] Admin Panel to Create Accounts
 - [x] Panel to create Shops and Auctions
-- [ ] Main Page to view and Compare Auctions (listing of Items)
+- [x] Main Page to view Auctions and lowest Prices (listing of Items)
 - [ ] Page to analyse every Item
 - [ ] Secured API to Insert Auctions
 

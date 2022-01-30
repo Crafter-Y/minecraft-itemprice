@@ -26,6 +26,23 @@ class MainController extends AppController
         } catch (Exception $e) {
             $this->redirect("main/databaseNotFound");
         }
+        $sortation = false;
+        $sorttype = "trending";
+        $search = false;
+
+        if (isset($this->params["form"]["form1"])) {
+            if (isset($this->params["form"]["sorting"])) {
+                $sortation = $this->params["form"]["sorting"];
+                $sorttype = $this->params["form"]["sorting"];
+
+                if (isset($this->params["form"]["search"]) && $this->params["form"]["search"] != "") {
+                    $search = $this->params["form"]["search"];
+                    $this->set("search", $search);
+                }
+            }
+        }
+        $this->set("sortation", $sorttype);
+        $this->set("content", $this->Lifecycle->getTrending($sortation, $search));
     }
 
     public function databaseNotFound() {

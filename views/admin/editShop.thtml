@@ -47,6 +47,9 @@
             </div>
         </div>
     <?php } ?>
+    <?php if(isset($searchQuery)) { ?>
+        <h2 class="w-full text-3xl font-semibold text-center mt-6">Search results for <?php echo $searchQuery; ?></h2>
+    <?php } ?>
     <?php if(count($shop["auctions"])) { ?>
         <!-- Auctions: -->
         <div class="w-full flex justify-center mt-4 pb-10">
