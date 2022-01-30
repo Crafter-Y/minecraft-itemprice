@@ -3,7 +3,7 @@
 class Auth extends AppModel
 {
     public function createRootAccount(String $username, String $password) {
-        $this->query("UPDATE shop_schema SET v = '1' WHERE k = 'rootAccountCreated'");
+        $this->query("UPDATE `shop_schema` SET `v` = '1' WHERE `k` = 'rootAccountCreated'");
         
         return $this->createAccount($username, $password, "root");
     }
@@ -14,7 +14,7 @@ class Auth extends AppModel
             "error" => ""
         );
         
-        $res = $this->query("SELECT * FROM users WHERE username = '" . $username . "'");
+        $res = $this->query("SELECT * FROM `users` WHERE `username` = '" . $username . "'");
         if (count($res) == 0) {
             $returner["success"] = false;
             $returner["error"] = "Accound could not be found!";
@@ -32,7 +32,7 @@ class Auth extends AppModel
     }
 
     public function createAccount (String $username, String $password, String $role) {
-        $this->query("INSERT INTO users (username, password, role) VALUES ('" . $username . "', '" . password_hash($password, PASSWORD_DEFAULT) . "', '" . $role . "')");
-        return $this->query("SELECT id FROM users WHERE username = '" . $username . "'");
+        $this->query("INSERT INTO `users` (`username`, `password`, `role`) VALUES ('" . $username . "', '" . password_hash($password, PASSWORD_DEFAULT) . "', '" . $role . "')");
+        return $this->query("SELECT `id` FROM `users` WHERE `username` = '" . $username . "'");
     }
 }
