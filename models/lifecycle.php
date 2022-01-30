@@ -165,9 +165,10 @@ class Lifecycle extends AppModel
     }
 
     public function isDefaultUserAllowedToViewMainController() {
-        $res = $this->query("SELECT v FROM shop_schema WHERE k = 'defaultUserAccess'");
+        $this->checkShopSchemaTable();
+        $res = $this->query("SELECT `v` FROM `shop_schema` WHERE `k` = 'defaultUserAccess'");
         if (count($res) == 0) {
-            $this->query("INSERT INTO shop_schema (k, v) VALUES ('defaultUserAccess', '0')");
+            $this->query("INSERT INTO `shop_schema` (`k`, `v`) VALUES ('defaultUserAccess', '0')");
             return false;
         }
         if ($res[0]["v"] == "0") {
