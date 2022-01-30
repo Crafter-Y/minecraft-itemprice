@@ -184,6 +184,11 @@ class AdminController extends AppController
             $this->Lifecycle->configureShop($shopId, $name, $description, $owner);
         }
 
+        if(isset($this->params["form"]["form2"])) {
+            $this->Lifecycle->deleteShop($shopId);
+            $this->redirect("admin/index");
+        }
+
         $shop = $this->Lifecycle->getShop($shopId, false);
         if (!$shop) {
             $this->redirect("admin/index");

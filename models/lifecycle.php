@@ -248,4 +248,11 @@ class Lifecycle extends AppModel
         $this->checkShopSchemaTable();
         $this->query("UPDATE shop_schema SET v = '$state' WHERE k = 'isAdminAllowedToEditShop'");
     }
+
+    public function deleteShop($shopId){
+        $this->checkShopsTable();
+        $this->query("DELETE FROM shops WHERE id = '$shopId'");
+        $this->query("DELETE FROM auctions WHERE shopId = '$shopId'");
+        $this->updateTrendingCache();
+    }
 }
