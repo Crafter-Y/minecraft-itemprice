@@ -224,4 +224,28 @@ class Lifecycle extends AppModel
         
         return $res;
     }
+
+    public function isAdminAllowedToEditShop() {
+        $this->checkShopSchemaTable();
+        $res = $this->query("SELECT `v` FROM `shop_schema` WHERE `k` = 'isAdminAllowedToEditShop'");
+        if (count($res) == 0) {
+            $this->query("INSERT INTO `shop_schema` (`k`, `v`) VALUES ('isAdminAllowedToEditShop', '0')");
+            return false;
+        }
+        if ($res[0]["v"] == "0") {
+            return false;
+        }
+        return true;
+    }
+
+    public function configureShop($shopId, $name, $description, $owner) {
+        $this->checkShopsTable();
+        $this->query("UPDATE shops SET name = '$name', description = '$description', owner = '$owner' WHERE id = '$shopId'");
+    }
+
+    public function setAdminAllowedToEditShop($state) {
+        $state = $state ? "1" : "0";
+        $this->checkShopSchemaTable();
+        $this->query("UPDATE shop_schema SET v = '$state' WHERE k = 'isAdminAllowedToEditShop'");
+    }
 }

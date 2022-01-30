@@ -29,6 +29,11 @@ class AdminController extends AppController
             $this->redirect("admin/login");
         }
         $this->set("shops", $this->Lifecycle->getShops());
+        $canEditShopSchema = $this->Lifecycle->isAdminAllowedToEditShop();
+        if ($this->Session->read("role") == "root") {
+            $canEditShopSchema = true;
+        }
+        $this->set("canEditShop", $canEditShopSchema);
     }
 
     public function login() {
@@ -100,9 +105,12 @@ class AdminController extends AppController
 
         if (isset($this->params["form"]["form3"])) {
             $defaultUserAccess = isset($this->params["form"]["defaultUserAccess"]);
+            $isAdminAllowedToEditShop = isset($this->params["form"]["isAdminAllowedToEditShop"]);
             $this->Lifecycle->setDefaultUserAccess($defaultUserAccess);
+            $this->Lifecycle->setAdminAllowedToEditShop($isAdminAllowedToEditShop);
         }
         $this->set("defaultUserAccess", $this->Lifecycle->isDefaultUserAllowedToViewMainController());
+        $this->set("isAdminAllowedToEditShop", $this->Lifecycle->isAdminAllowedToEditShop());
     }
 
     public function editShop($shopId = false) {
@@ -155,5 +163,33 @@ class AdminController extends AppController
         }
         $this->Lifecycle->hardReset();
         $this->redirect("main/initialSetup");
+    }
+
+    public function configureShop($shopId = false) {
+        if (!$this->checkLoggedIn()) {
+            $this->redirect("admin/login");
+        }
+        if ($this->Session->read("role") == "admin" && !$this->Lifecycle->isAdminAllowedToEditShop()) {
+            $this->redirect("admin/index");
+        }
+
+        if (!$shopId) {
+            $this->redirect("admin/index");
+        }
+
+        if(isset($this->params["form"]["form1"])) {
+            $name = $this->params["form"]["name"];
+            $description = $this->params["form"]["description"];
+            $owner = $this->params["form"]["owner"];
+            $this->Lifecycle->configureShop($shopId, $name, $description, $owner);
+        }
+
+        $shop = $this->Lifecycle->getShop($shopId, false);
+        if (!$shop) {
+            $this->redirect("admin/index");
+        }
+        unset($shop["auctions"]);
+        $this->set("shop", $shop);
+
     }
 }
