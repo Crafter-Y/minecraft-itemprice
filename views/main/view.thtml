@@ -1,0 +1,60 @@
+<div class="flex w-full justify-center flex-wrap">
+    <div class="flex mt-12 gap-4 items-center w-full justify-center">
+        <img id="img" src="" alt="<?php echo $item; ?>" height="96px" width="96px">
+        <h1 id="item" class="text-4xl font-semibold"><?php echo $item ?></h1>
+    </div>
+
+    <div class="mt-6 bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex">
+        <div>
+            <p class="text-center text-sm">Lowest</p>
+            <p class="text-2xl text-center">Price per Piece</p>
+            <p class="text-center my-4 text-3xl price"><?php echo $content["data"][0]["pricePerPc"] ?></p>
+        </div>
+        <div class="divider divider-vertical"></div>
+        <div>
+            <p class="text-center text-sm">Lowest</p>
+            <p class="text-2xl text-center">Price per Stack (64)</p>
+            <p class="text-center my-4 text-3xl price"><?php echo $content["data"][0]["pricePerStack"] ?></p>
+        </div>
+        <div class="divider divider-vertical"></div>
+        <div>
+            <p class="text-center text-sm">Avarage</p>
+            <p class="text-2xl text-center">Price per Piece</p>
+            <p class="text-center my-4 text-3xl price"><?php echo $content["sumPerPc"] ?></p>
+        </div>
+        <div class="divider divider-vertical"></div>
+        <div>
+            <p class="text-center text-sm">Avarage</p>
+            <p class="text-2xl text-center">Price per Stack (64)</p>
+            <p class="text-center my-4 text-3xl price"><?php echo $content["sumPerStack"] ?></p>
+        </div>
+    </div>
+    <div class="w-full flex justify-center mt-4 pb-10 overflow-x-scroll md:overflow-auto">
+            <table class="table table-zebra">
+                <thead>
+                    <tr>
+                        <th class="text-lg">Original Price</th> 
+                        <th class="text-lg">Price per Piece</th> 
+                        <th class="text-lg">Price per Stack (64)</th> 
+                        <th class="text-lg">Shop</th> 
+                        <th class="text-lg">Shop Owner</th> 
+                        <th class="text-lg">Shop Description</th> 
+                    </tr>
+                </thead> 
+                <tbody id="table">
+                    <?php foreach ($content["data"] as $row) { ?>
+                    <tr>
+                        <td class="text-lg flex gap-2"><p class="price"><?php echo $row["price"]; ?></p> <span> (<?php echo $row["amount"] ?>)</span></td>
+                        <td class="text-lg price"><?php echo $row["pricePerPc"]; ?></td>  
+                        <td class="text-lg price"><?php echo $row["pricePerStack"]; ?></td>  
+                        <td class="text-lg"><?php echo $row["name"]; ?></td> 
+                        <td class="text-lg"><?php echo $row["owner"]; ?></td>
+                        <td class="text-lg"><?php echo $row["description"]; ?></td>  
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+
+</div>
+<script src="/js/view.js"></script>

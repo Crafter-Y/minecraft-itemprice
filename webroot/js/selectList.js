@@ -18,7 +18,7 @@ const main = async () => {
             let option = document.createElement("option");
             option.value = data[i].name;
             let name = data[i].name;
-            name = name.replace("_", " ");
+            name = name.replaceAll("_", " ");
             name = toCamelCase(name);
 
             option.innerText = name;
@@ -34,7 +34,7 @@ const main = async () => {
                 if (texture) {
                     node.cells[0].innerHTML = `<img src="${texture.texture}" alt="${texture.name}" height="32" width="32">`;
                 }
-                node.cells[1].innerText = toCamelCase(item.replace("_", " "));
+                node.cells[1].innerText = toCamelCase(item.replaceAll("_", " "));
 
                 node.cells[3].innerText = formatPrice(node.cells[3].innerText)
                 node.cells[4].innerText = formatPrice(node.cells[4].innerText)

@@ -46,7 +46,7 @@ npm run css
 - [x] Admin Panel to Create Accounts
 - [x] Panel to create Shops and Auctions
 - [x] Main Page to view Auctions and lowest Prices (listing of Items)
-- [ ] Page to analyse every Item
+- [x] Page to analyse every Item
 - [ ] Secured API to Insert Auctions
 
 # Info
@@ -56,6 +56,8 @@ npm run css
 Got the Datalist from [PrismarineJS/minecraft-assets](https://github.com/PrismarineJS/minecraft-assets)
 
 [texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)
+
+I removed duplicate Entrys that are not needed for my Application
 
 # Contribute
 

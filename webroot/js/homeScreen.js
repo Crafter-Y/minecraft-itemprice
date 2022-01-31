@@ -18,7 +18,7 @@ const main = async () => {
             let item = entry.children[1].innerText
             let texture = data.find(x => x.name === item);
             entry.children[0].firstElementChild.setAttribute("src", texture.texture);
-            entry.children[1].innerText = toCamelCase(item.replace("_", " "));
+            entry.children[1].innerText = toCamelCase(item.replaceAll("_", " "));
             entry.children[2].innerText = formatPrice(entry.children[2].innerText) + "/pc."
         }
 

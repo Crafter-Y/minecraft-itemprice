@@ -10,22 +10,32 @@ class MainController extends AppController
         $this->set("loggedIn", $this->Session->read("loggedIn"));
         $this->set("username", $this->Session->read("username"));
         $this->set("role", $this->Session->read("role"));
-
-        if (!$this->Lifecycle->isDefaultUserAllowedToViewMainController() && !$this->Session->read("loggedIn")) {
-            $this->redirect("auth/login");
-        }
+        if ($this->params["action"] != "initialsetup") {
+            try {
+                $res = $this->Lifecycle->getInitialInformationTable();
+                if (!$res) {
+                    $this->redirect("main/initialSetup");
+                }
+            } catch (Exception $e) {
+                $this->redirect("main/databaseNotFound");
+            }
+            if (!$this->Lifecycle->isDefaultUserAllowedToViewMainController() && !$this->Session->read("loggedIn")) {
+                $this->redirect("auth/login");
+            }
+        } else {
+            try {
+                $res = $this->Lifecycle->getInitialInformationTable();
+                if ($res) {
+                    $this->redirect("main/index");
+                }
+            } catch (Exception $e) {
+                $this->redirect("main/databaseNotFound");
+            }
+        }  
     }
 
     public function index()
     {
-        try {
-            $res = $this->Lifecycle->getInitialInformationTable();
-            if (!$res) {
-                $this->redirect("main/initialSetup");
-            }
-        } catch (Exception $e) {
-            $this->redirect("main/databaseNotFound");
-        }
         $sortation = false;
         $sorttype = "trending";
         $search = false;
@@ -46,24 +56,10 @@ class MainController extends AppController
     }
 
     public function databaseNotFound() {
-        try {
-            $res = $this->Lifecycle->getInitialInformationTable();
-            $this->redirect("main/index");
-        } catch (Exception $ignored) {
-            
-        }
         $this->set("database", getenv("DB_DATABASE"));
     }
 
     public function initialSetup() {
-        try {
-            $res = $this->Lifecycle->getInitialInformationTable();
-            if ($res) {
-                $this->redirect("main/index");
-            }
-        } catch (Exception $e) {
-            $this->redirect("main/databaseNotFound");
-        }
         $this->set("error", false);
         if (isset($this->params["form"])) {
             $username = $this->params["form"]["username"];
@@ -93,6 +89,19 @@ class MainController extends AppController
     public function logout() {
         $this->Session->destroy();
         $this->redirect("main/index");
+    }
+
+    public function view ($itemName = false) {
+        if (!$itemName) {
+            $this->redirect("main/index");
+        }
+        $this->set("item", $itemName);
+        $content = $this->Lifecycle->getView($itemName);
+        if (!$content) {
+            $this->redirect("main/index");
+        }
+
+        $this->set("content", $content);
     }
    
 }

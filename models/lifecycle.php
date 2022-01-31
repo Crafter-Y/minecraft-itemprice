@@ -255,4 +255,35 @@ class Lifecycle extends AppModel
         $this->query("DELETE FROM auctions WHERE shopId = '$shopId'");
         $this->updateTrendingCache();
     }
+
+    private function cmp_pricePerPc($key) {
+        return function ($a, $b) use ($key) {
+            return $a["pricePerPc"] > $b["pricePerPc"];
+        };
+    }
+
+    public function getView($itemName) {
+        $returner = array("ok" => true);
+
+        $res = $this->query("SELECT auctions.price, auctions.amount, auctions.shopId, shops.name, shops.description, shops.owner FROM auctions JOIN shops ON auctions.shopId = shops.id WHERE item = '$itemName'");
+        if (count($res) == 0) {
+            $returner["ok"] = false;
+            return $returner;
+        }
+
+        $sumPerPc = 0;
+        $sumPerStack = 0;
+        foreach($res as $key => $row) {
+            $res[$key]["pricePerPc"] = $row["price"] / $row["amount"];
+            $res[$key]["pricePerStack"] = $row["price"] / $row["amount"] * 64;
+            $sumPerPc += $res[$key]["pricePerPc"];
+            $sumPerStack += $res[$key]["pricePerStack"];
+        }
+        usort($res, $this->cmp_pricePerPc('key_b'));
+        $returner["data"] = $res;
+        $returner["sumPerPc"] = $sumPerPc / count($res);
+        $returner["sumPerStack"] = $sumPerStack / count($res);
+
+        return $returner;
+    }
 }
