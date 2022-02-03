@@ -152,7 +152,9 @@ class Lifecycle extends AppModel
 
     public function deleteAuction($id) {
         $this->checkAuctionsTable();
-        return $this->query("DELETE FROM auctions WHERE id = '$id'");
+        $res = $this->query("DELETE FROM auctions WHERE id = '$id'");
+        $this->updateTrendingCache();
+        return $res;
     }
 
     public function hardReset() {

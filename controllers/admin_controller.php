@@ -136,6 +136,8 @@ class AdminController extends AppController
             $price = $this->params["form"]["price"];
             $amount = $this->params["form"]["amount"];
             $creator = $this->Session->read("userId");
+            $this->set("lastPrice", $price);
+            $this->set("lastAmount", $amount);
 
             if ($item == "Choose Item") {
                 $this->set("error", "Please choose an item.");
