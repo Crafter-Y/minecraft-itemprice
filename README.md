@@ -36,17 +36,24 @@ npm run css
 
 # TODO
 
-- [x] Setting up a php app with the Kata Framework
+- [ ] Edit the auction Structure to include
 
-- [x] Initial Page to set Root Account
+  - [ ] Auction Lifetime
+  - [ ] Creation Time/Date
+  - [ ] "Not maintained" Label
+  - [ ] "Reliable" Label
+  - [ ] "mostly available" Label
 
-  - [x] Enable account verification for default users
-  - [x] Setup Databases and Tables
+- [ ] Default label for shop
+- [ ] include lowest auction price in main/index
+- [ ] include auctions in main/view
 
-- [x] Admin Panel to Create Accounts
-- [x] Panel to create Shops and Auctions
-- [x] Main Page to view Auctions and lowest Prices (listing of Items)
-- [x] Page to analyse every Item
+  - [ ] slideshow
+  - [ ] filter options
+
+    - [ ] newest
+    - [ ] lowest
+
 - [ ] Secured API to Insert Auctions
 
 # Info
