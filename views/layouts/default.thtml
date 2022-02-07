@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title_for_layout ?></title>
-    <link rel="stylesheet" href="<?php echo $html->url("css/style.css");  ?>">
+    <link rel="stylesheet" href="<?php echo $html->url("css/style.css"); ?>">
 </head>
 
 <body class="bg-gray-700 min-h-screen">
@@ -18,7 +18,7 @@
         <div class="gap-4">
             <?php if (isset($loggedIn) && $loggedIn) { ?>
                 <p class="text-xl"><?php echo $username; ?></p>
-                <?php if ($role == "root") {?>
+                <?php if ($role == "root") { ?>
                     <a href="/admin/rootPanel"><button class="btn btn-sm text-lg bg-gray-800">Page Settings</button></a>
                 <?php } ?>
                 <a href="/main/logout"><button class="btn btn-sm text-lg bg-gray-800">Logout</button></a>

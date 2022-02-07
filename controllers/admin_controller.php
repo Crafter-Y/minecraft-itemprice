@@ -1,10 +1,11 @@
 <?php
 class AdminController extends AppController
 {
-    public $components = array('Session');
-    public $uses = array("Auth", "Lifecycle");
+    public $components = ["Session"];
+    public $uses = ["Auth", "Lifecycle"];
 
-    public function beforeAction() {
+    public function beforeAction()
+    {
         parent::beforeAction();
 
         $this->set("loggedIn", $this->Session->read("loggedIn"));
@@ -12,16 +13,19 @@ class AdminController extends AppController
         $this->set("role", $this->Session->read("role"));
     }
 
-    private function checkLoggedIn () {
+    private function checkLoggedIn()
+    {
         if (!$this->Session->read("loggedIn")) {
             return false;
         }
-        if ($this->Session->read("role") != "root" && $this->Session->read("role") != "admin") {
+        if (
+            $this->Session->read("role") != "root" &&
+            $this->Session->read("role") != "admin"
+        ) {
             return false;
         }
         return true;
     }
-
 
     public function index()
     {
@@ -36,7 +40,8 @@ class AdminController extends AppController
         $this->set("canEditShop", $canEditShopSchema);
     }
 
-    public function login() {
+    public function login()
+    {
         if ($this->checkLoggedIn()) {
             $this->redirect("admin/index");
         }
@@ -49,11 +54,14 @@ class AdminController extends AppController
                 $this->Session->write("username", $username);
                 $this->Session->write("userId", $res["id"]);
                 $this->Session->write("loggedIn", true);
-                
+
                 if ($this->checkLoggedIn()) {
                     $this->redirect("admin/index");
                 } else {
-                    $this->set("error", "You don't have the permissions to pass by.");
+                    $this->set(
+                        "error",
+                        "You don't have the permissions to pass by.",
+                    );
                 }
             } else {
                 $this->set("error", $res["error"]);
@@ -61,7 +69,8 @@ class AdminController extends AppController
         }
     }
 
-    public function rootPanel() {
+    public function rootPanel()
+    {
         if ($this->Session->read("role") != "root") {
             $this->redirect("admin/index");
         }
@@ -72,25 +81,43 @@ class AdminController extends AppController
             $role = $this->params["form"]["role"];
             if (preg_match("/^[a-zA-Z_\-0-9]{5,24}$/", $username) == 1) {
                 if ($password1 == $password2) {
-                    if (preg_match("/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/", $password1) == 1) {   
+                    if (
+                        preg_match(
+                            "/^[a-zA-Z_\-0-9!\§\$\%\&\/\(\)\=\?\+\#_\-]{7,64}$/",
+                            $password1,
+                        ) == 1
+                    ) {
                         if (preg_match("/^user|admin|root$/", $role) == 1) {
                             try {
-                                $this->Auth->createAccount($username, $password1, $role);
+                                $this->Auth->createAccount(
+                                    $username,
+                                    $password1,
+                                    $role,
+                                );
                                 $this->set("success", "Account created!");
                             } catch (Exception $e) {
-                                $this->set("error", "This Account is already existing!");
+                                $this->set(
+                                    "error",
+                                    "This Account is already existing!",
+                                );
                             }
                         } else {
                             $this->set("error", "You need to specify a role.");
                         }
                     } else {
-                        $this->set("error", "Password must be at least 7 characters long and can only contain the following characters: a-Z, 0-9, _, -, !, §, $, %, &, /, (, ), =, ?, +, #, _");
+                        $this->set(
+                            "error",
+                            "Password must be at least 7 characters long and can only contain the following characters: a-Z, 0-9, _, -, !, §, $, %, &, /, (, ), =, ?, +, #, _",
+                        );
                     }
                 } else {
                     $this->set("error", "Passwords do not match");
                 }
             } else {
-                $this->set("error", "Username must be between 5 and 24 characters long and contain only letters, numbers and _-");
+                $this->set(
+                    "error",
+                    "Username must be between 5 and 24 characters long and contain only letters, numbers and _-",
+                );
             }
         }
 
@@ -98,22 +125,40 @@ class AdminController extends AppController
             $name = $this->params["form"]["name"];
             $description = $this->params["form"]["description"];
             $owner = $this->params["form"]["owner"];
-            
-            $this->Lifecycle->createShop($name, $description, $this->Session->read("userId"), $owner);
+
+            $this->Lifecycle->createShop(
+                $name,
+                $description,
+                $this->Session->read("userId"),
+                $owner,
+            );
             $this->set("success2", "Shop created!");
         }
 
         if (isset($this->params["form"]["form3"])) {
-            $defaultUserAccess = isset($this->params["form"]["defaultUserAccess"]);
-            $isAdminAllowedToEditShop = isset($this->params["form"]["isAdminAllowedToEditShop"]);
+            $defaultUserAccess = isset(
+                $this->params["form"]["defaultUserAccess"],
+            );
+            $isAdminAllowedToEditShop = isset(
+                $this->params["form"]["isAdminAllowedToEditShop"],
+            );
             $this->Lifecycle->setDefaultUserAccess($defaultUserAccess);
-            $this->Lifecycle->setAdminAllowedToEditShop($isAdminAllowedToEditShop);
+            $this->Lifecycle->setAdminAllowedToEditShop(
+                $isAdminAllowedToEditShop,
+            );
         }
-        $this->set("defaultUserAccess", $this->Lifecycle->isDefaultUserAllowedToViewMainController());
-        $this->set("isAdminAllowedToEditShop", $this->Lifecycle->isAdminAllowedToEditShop());
+        $this->set(
+            "defaultUserAccess",
+            $this->Lifecycle->isDefaultUserAllowedToViewMainController(),
+        );
+        $this->set(
+            "isAdminAllowedToEditShop",
+            $this->Lifecycle->isAdminAllowedToEditShop(),
+        );
     }
 
-    public function editShop($shopId = false) {
+    public function editShop($shopId = false)
+    {
         $searchQuery = false;
         if (!$this->checkLoggedIn()) {
             $this->redirect("admin/login");
@@ -121,8 +166,11 @@ class AdminController extends AppController
         if (!$shopId) {
             $this->redirect("admin/index");
         }
-        
-        if (isset($this->params["url"]["search"]) && $this->params["url"]["search"]) {
+
+        if (
+            isset($this->params["url"]["search"]) &&
+            $this->params["url"]["search"]
+        ) {
             $searchQuery = $this->params["url"]["search"];
             $this->set("searchQuery", $searchQuery);
         }
@@ -141,8 +189,14 @@ class AdminController extends AppController
 
             if ($item == "Choose Item") {
                 $this->set("error", "Please choose an item.");
-            } else {   
-                $this->Lifecycle->createAuction($item, $price, $shopId, $creator, $amount);
+            } else {
+                $this->Lifecycle->createAuction(
+                    $item,
+                    $price,
+                    $shopId,
+                    $creator,
+                    $amount,
+                );
                 $this->set("success", "Auction Created!");
                 $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
             }
@@ -151,12 +205,13 @@ class AdminController extends AppController
         if (isset($this->params["form"]["form3"])) {
             $auctionId = $this->params["form"]["auctionId"];
             $this->Lifecycle->deleteAuction($auctionId);
-            $shop = $this->Lifecycle->getShop($shopId, $searchQuery); 
+            $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
         }
         $this->set("shop", $shop);
     }
 
-    public function hardReset() {
+    public function hardReset()
+    {
         if (!$this->checkLoggedIn()) {
             $this->redirect("admin/login");
         }
@@ -167,11 +222,15 @@ class AdminController extends AppController
         $this->redirect("main/initialSetup");
     }
 
-    public function configureShop($shopId = false) {
+    public function configureShop($shopId = false)
+    {
         if (!$this->checkLoggedIn()) {
             $this->redirect("admin/login");
         }
-        if ($this->Session->read("role") == "admin" && !$this->Lifecycle->isAdminAllowedToEditShop()) {
+        if (
+            $this->Session->read("role") == "admin" &&
+            !$this->Lifecycle->isAdminAllowedToEditShop()
+        ) {
             $this->redirect("admin/index");
         }
 
@@ -179,14 +238,19 @@ class AdminController extends AppController
             $this->redirect("admin/index");
         }
 
-        if(isset($this->params["form"]["form1"])) {
+        if (isset($this->params["form"]["form1"])) {
             $name = $this->params["form"]["name"];
             $description = $this->params["form"]["description"];
             $owner = $this->params["form"]["owner"];
-            $this->Lifecycle->configureShop($shopId, $name, $description, $owner);
+            $this->Lifecycle->configureShop(
+                $shopId,
+                $name,
+                $description,
+                $owner,
+            );
         }
 
-        if(isset($this->params["form"]["form2"])) {
+        if (isset($this->params["form"]["form2"])) {
             $this->Lifecycle->deleteShop($shopId);
             $this->redirect("admin/index");
         }
@@ -197,6 +261,5 @@ class AdminController extends AppController
         }
         unset($shop["auctions"]);
         $this->set("shop", $shop);
-
     }
 }

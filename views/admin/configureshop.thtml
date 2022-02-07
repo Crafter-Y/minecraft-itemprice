@@ -1,15 +1,51 @@
 <div class="flex justify-center w-full flex-wrap mt-12">
-    <h1 class="text-4xl font-bold w-full text-center">Configure Shop '<?php echo $shop["name"] ?>'</h1>
-    <p class="text-sm w-full text-center">Erstellt von: <?php echo $shop["username"] ?></p>
-    <form method="post" class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 mt-12">
-        <p class="text-sm">Shop Name</p>
-        <input type="text" name="name" class="input w-full" placeholder="Shop Name" value="<?php echo $shop["name"] ?>">
-        <p class="text-sm mt-2">Shop Description</p>
-        <input type="text" name="description" class="input w-full" placeholder="Description" value="<?php echo $shop["description"] ?>">
-        <p class="text-sm mt-2">Shop Owner</p>
-        <input type="text" name="owner" class="input w-full" placeholder="Shop Owner" value="<?php echo $shop["owner"] ?>">
-        <input type="submit" name="form1" value="Save" class="w-full btn btn-info mt-4 text-lg">
-        <input type="submit" name="form2" value="Delete Shop" class="w-full btn btn-error mt-4 text-lg">
-        <a href="/admin/index/" class="btn w-full mt-4 text-lg">Cancel</a>
-    </form>
+	<h1 class="text-4xl font-bold w-full text-center">
+		Configure Shop '<?php echo $shop["name"]; ?>'
+	</h1>
+	<p class="text-sm w-full text-center">
+		Erstellt von:
+		<?php echo $shop["username"]; ?>
+	</p>
+	<form
+		method="post"
+		class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 mt-12"
+	>
+		<p class="text-sm">Shop Name</p>
+		<input 
+            type="text" 
+            name="name" 
+            class="input w-full" 
+            placeholder="Shop Name" 
+            value="<?php echo $shop["name"]; ?>"
+        >
+		<p class="text-sm mt-2">Shop Description</p>
+		<input 
+            type="text" 
+            name="description" 
+            class="input w-full"
+		    placeholder="Description" 
+            value="<?php echo $shop["description"]; ?>"
+        >
+		<p class="text-sm mt-2">Shop Owner</p>
+		<input 
+            type="text" 
+            name="owner" 
+            class="input w-full" 
+            placeholder="Shop Owner" 
+            value="<?php echo $shop["owner"]; ?>"
+        />
+		<input
+			type="submit"
+			name="form1"
+			value="Save"
+			class="w-full btn btn-info mt-4 text-lg"
+		/>
+		<input
+			type="submit"
+			name="form2"
+			value="Delete Shop"
+			class="w-full btn btn-error mt-4 text-lg"
+		/>
+		<a href="/admin/index/" class="btn w-full mt-4 text-lg">Cancel</a>
+	</form>
 </div>

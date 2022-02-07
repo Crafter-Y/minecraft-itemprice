@@ -58,18 +58,26 @@
             <div class="mt-4">
                 <div class="flex items-center">
                     <span class="mr-2">Should non-Authenticated Users have access to the main Controller? </span>
-                    <input type="checkbox" name="defaultUserAccess" <?php if($defaultUserAccess) echo "checked='checked'" ?> class="toggle">
+                    <input 
+                        type="checkbox" 
+                        name="defaultUserAccess" 
+                        <?php if ($defaultUserAccess) {
+                            echo "checked='checked'";
+                        } ?> class="toggle"
+                    >
                 </div>
                 <div class="flex items-center mt-2">
                     <span class="mr-2">Should Admins be allowed to configure Shops? </span>
-                    <input type="checkbox" name="isAdminAllowedToEditShop" <?php if($isAdminAllowedToEditShop) echo "checked='checked'" ?> class="toggle">
-                </div>
-                
+                    <input 
+                        type="checkbox" 
+                        name="isAdminAllowedToEditShop" 
+                        <?php if ($isAdminAllowedToEditShop) {
+                            echo "checked='checked'";
+                        } ?> class="toggle"
+                    >
+                </div>     
             </div>
-           
             <input type="submit" name="form3" value="Save Settings" class="btn btn-lg btn-info mt-4">
         </form>
-        
     </div>
-
 </div>

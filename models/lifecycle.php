@@ -2,20 +2,24 @@
 
 class Lifecycle extends AppModel
 {
-    private function checkShopSchemaTable() {
+    private function checkShopSchemaTable()
+    {
         $res = $this->query("SHOW TABLES LIKE 'shop_schema'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE shop_schema (
                 k VARCHAR(255) NOT NULL,
                 v VARCHAR(255) NOT NULL
             )");
-            $this->query("INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')");
+            $this->query(
+                "INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')",
+            );
             return false;
         }
         return true;
     }
 
-    private function checkShopsTable() {
+    private function checkShopsTable()
+    {
         $res = $this->query("SHOW TABLES LIKE 'shops'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE shops (
@@ -32,7 +36,8 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    private function checkAuctionsTable() {
+    private function checkAuctionsTable()
+    {
         $res = $this->query("SHOW TABLES LIKE 'auctions'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE auctions (
@@ -49,7 +54,8 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    private function checkUsersTable() {
+    private function checkUsersTable()
+    {
         $res = $this->query("SHOW TABLES LIKE 'users'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE users (
@@ -65,7 +71,8 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    private function checkTrendingTable() {
+    private function checkTrendingTable()
+    {
         $res = $this->query("SHOW TABLES LIKE 'trending'");
         if (count($res) == 0) {
             $this->query("CREATE TABLE trending (
@@ -76,14 +83,19 @@ class Lifecycle extends AppModel
         }
     }
 
-    public function getInitialInformationTable() {
+    public function getInitialInformationTable()
+    {
         $this->checkShopSchemaTable();
         $this->checkShopsTable();
         $this->checkAuctionsTable();
         $this->checkUsersTable();
-        $res = $this->query("SELECT v FROM shop_schema WHERE k = 'rootAccountCreated'");
+        $res = $this->query(
+            "SELECT v FROM shop_schema WHERE k = 'rootAccountCreated'",
+        );
         if (count($res) == 0) {
-            $this->query("INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')");
+            $this->query(
+                "INSERT INTO shop_schema (k, v) VALUES ('rootAccountCreated', '0')",
+            );
             return false;
         }
         if ($res[0]["v"] == "0") {
@@ -92,22 +104,31 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    public function getShops() {
+    public function getShops()
+    {
         $this->checkShopsTable();
         $this->checkAuctionsTable();
-        $res = $this->query("SELECT shops.name, shops.id, shops.description, shops.creator, shops.owner, COUNT(auctions.id) FROM shops LEFT JOIN auctions On shops.id = auctions.shopId GROUP BY shops.name");
+        $res = $this->query(
+            "SELECT shops.name, shops.id, shops.description, shops.creator, shops.owner, COUNT(auctions.id) FROM shops LEFT JOIN auctions On shops.id = auctions.shopId GROUP BY shops.name",
+        );
         return $res;
     }
 
-    public function createShop($name, $description, $creator, $owner) {
+    public function createShop($name, $description, $creator, $owner)
+    {
         $this->checkShopsTable();
-        return $this->query("INSERT INTO shops (name, description, creator, owner) VALUES ('$name', '$description', '$creator', '$owner')");
+        return $this->query(
+            "INSERT INTO shops (name, description, creator, owner) VALUES ('$name', '$description', '$creator', '$owner')",
+        );
     }
 
-    public function getShop($id, $searchQuery) {
+    public function getShop($id, $searchQuery)
+    {
         $this->checkShopsTable();
         $this->checkUsersTable();
-        $res = $this->query("SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'");
+        $res = $this->query(
+            "SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'",
+        );
         if (count($res) == 0) {
             return false;
         }
@@ -116,48 +137,63 @@ class Lifecycle extends AppModel
         return $res[0];
     }
 
-    private function cmp_item($key) {
+    private function cmp_item($key)
+    {
         return function ($a, $b) use ($key) {
             return strcmp($a["item"], $b["item"]);
         };
     }
 
-    public function getShopAuctions($shopId, $searchQuery) {
+    public function getShopAuctions($shopId, $searchQuery)
+    {
         $this->checkAuctionsTable();
-        $res = $this->query("SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'");
-        
+        $res = $this->query(
+            "SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'",
+        );
+
         if ($searchQuery) {
             $searchQuery = str_replace(" ", "_", $searchQuery);
-            $newres = array();
+            $newres = [];
             foreach ($res as $entry) {
-                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) == strtolower($searchQuery)) {
+                if (
+                    substr(
+                        strtolower($entry["item"]),
+                        0,
+                        strlen($searchQuery),
+                    ) == strtolower($searchQuery)
+                ) {
                     array_push($newres, $entry);
                 }
             }
-            usort($newres, $this->cmp_item('key_b'));
+            usort($newres, $this->cmp_item("key_b"));
             return $newres;
         }
-        usort($res, $this->cmp_item('key_b'));
+        usort($res, $this->cmp_item("key_b"));
         return $res;
     }
 
-    public function createAuction($item, $price, $shopId, $creator, $amount) {
+    public function createAuction($item, $price, $shopId, $creator, $amount)
+    {
         $this->checkAuctionsTable();
-        $res = $this->query("INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')");
+        $res = $this->query(
+            "INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')",
+        );
 
         $this->updateTrendingCache();
 
         return $res;
     }
 
-    public function deleteAuction($id) {
+    public function deleteAuction($id)
+    {
         $this->checkAuctionsTable();
         $res = $this->query("DELETE FROM auctions WHERE id = '$id'");
         $this->updateTrendingCache();
         return $res;
     }
 
-    public function hardReset() {
+    public function hardReset()
+    {
         // this function should be used only for testing purposes
         // this function should completely reset the database and delete all tables
         $this->query("DROP TABLE auctions");
@@ -167,11 +203,16 @@ class Lifecycle extends AppModel
         $this->query("DROP TABLE trending");
     }
 
-    public function isDefaultUserAllowedToViewMainController() {
+    public function isDefaultUserAllowedToViewMainController()
+    {
         $this->checkShopSchemaTable();
-        $res = $this->query("SELECT `v` FROM `shop_schema` WHERE `k` = 'defaultUserAccess'");
+        $res = $this->query(
+            "SELECT `v` FROM `shop_schema` WHERE `k` = 'defaultUserAccess'",
+        );
         if (count($res) == 0) {
-            $this->query("INSERT INTO `shop_schema` (`k`, `v`) VALUES ('defaultUserAccess', '0')");
+            $this->query(
+                "INSERT INTO `shop_schema` (`k`, `v`) VALUES ('defaultUserAccess', '0')",
+            );
             return false;
         }
         if ($res[0]["v"] == "0") {
@@ -180,58 +221,79 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    public function setDefaultUserAccess($value) {
+    public function setDefaultUserAccess($value)
+    {
         $value = $value ? "1" : "0";
-        $this->query("UPDATE shop_schema SET v = '$value' WHERE k = 'defaultUserAccess'");
+        $this->query(
+            "UPDATE shop_schema SET v = '$value' WHERE k = 'defaultUserAccess'",
+        );
     }
 
-    private function updateTrendingCache() {
+    private function updateTrendingCache()
+    {
         $this->checkTrendingTable();
         $this->query("TRUNCATE TABLE trending");
-        $res = $this->query("SELECT item, COUNT(item) AS count, MIN(price / amount) AS minPrice FROM `auctions` GROUP BY item");
+        $res = $this->query(
+            "SELECT item, COUNT(item) AS count, MIN(price / amount) AS minPrice FROM `auctions` GROUP BY item",
+        );
         foreach ($res as $entry) {
-            $this->query("INSERT INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')");
+            $this->query(
+                "INSERT INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
+            );
         }
     }
 
-    private function cmp_count($key) {
+    private function cmp_count($key)
+    {
         return function ($a, $b) use ($key) {
             return $a["count"] < $b["count"];
         };
     }
 
-    public function getTrending($sortation, $searchQuery) {
+    public function getTrending($sortation, $searchQuery)
+    {
         $this->checkTrendingTable();
         $res = $this->query("SELECT * FROM trending");
         if ($sortation) {
             if ($sortation == "trending") {
-                usort($res, $this->cmp_count('key_b'));
-            } else if ($sortation == "alphanumerical") {
-                usort($res, $this->cmp_item('key_b'));
+                usort($res, $this->cmp_count("key_b"));
+            } elseif ($sortation == "alphanumerical") {
+                usort($res, $this->cmp_item("key_b"));
             }
         } else {
-            usort($res, $this->cmp_count('key_b'));
+            usort($res, $this->cmp_count("key_b"));
         }
 
         if ($searchQuery) {
             $searchQuery = str_replace(" ", "_", $searchQuery);
-            $newres = array();
+            $newres = [];
             foreach ($res as $entry) {
-                if (substr(strtolower($entry["item"]), 0, strlen($searchQuery)) == strtolower($searchQuery)) {
+                if (
+                    substr(
+                        strtolower($entry["item"]),
+                        0,
+                        strlen($searchQuery),
+                    ) == strtolower($searchQuery)
+                ) {
                     array_push($newres, $entry);
                 }
             }
             return $newres;
         }
-        
+
         return $res;
     }
 
-    public function isAdminAllowedToEditShop() {
+    public function isAdminAllowedToEditShop()
+    {
         $this->checkShopSchemaTable();
-        $res = $this->query("SELECT `v` FROM `shop_schema` WHERE `k` = 'isAdminAllowedToEditShop'");
+        $res = $this->query(
+            "SELECT `v` FROM `shop_schema` WHERE `k` = 'isAdminAllowedToEditShop'",
+        );
         if (count($res) == 0) {
-            $this->query("INSERT INTO `shop_schema` (`k`, `v`) VALUES ('isAdminAllowedToEditShop', '0')");
+            $this->query(
+                "INSERT INTO `shop_schema` (`k`, `v`) VALUES ('isAdminAllowedToEditShop', '0')",
+            );
             return false;
         }
         if ($res[0]["v"] == "0") {
@@ -240,34 +302,45 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    public function configureShop($shopId, $name, $description, $owner) {
+    public function configureShop($shopId, $name, $description, $owner)
+    {
         $this->checkShopsTable();
-        $this->query("UPDATE shops SET name = '$name', description = '$description', owner = '$owner' WHERE id = '$shopId'");
+        $this->query(
+            "UPDATE shops SET name = '$name', description = '$description', owner = '$owner' WHERE id = '$shopId'",
+        );
     }
 
-    public function setAdminAllowedToEditShop($state) {
+    public function setAdminAllowedToEditShop($state)
+    {
         $state = $state ? "1" : "0";
         $this->checkShopSchemaTable();
-        $this->query("UPDATE shop_schema SET v = '$state' WHERE k = 'isAdminAllowedToEditShop'");
+        $this->query(
+            "UPDATE shop_schema SET v = '$state' WHERE k = 'isAdminAllowedToEditShop'",
+        );
     }
 
-    public function deleteShop($shopId){
+    public function deleteShop($shopId)
+    {
         $this->checkShopsTable();
         $this->query("DELETE FROM shops WHERE id = '$shopId'");
         $this->query("DELETE FROM auctions WHERE shopId = '$shopId'");
         $this->updateTrendingCache();
     }
 
-    private function cmp_pricePerPc($key) {
+    private function cmp_pricePerPc($key)
+    {
         return function ($a, $b) use ($key) {
             return $a["pricePerPc"] > $b["pricePerPc"];
         };
     }
 
-    public function getView($itemName) {
-        $returner = array("ok" => true);
+    public function getView($itemName)
+    {
+        $returner = ["ok" => true];
 
-        $res = $this->query("SELECT auctions.price, auctions.amount, auctions.shopId, shops.name, shops.description, shops.owner FROM auctions JOIN shops ON auctions.shopId = shops.id WHERE item = '$itemName'");
+        $res = $this->query(
+            "SELECT auctions.price, auctions.amount, auctions.shopId, shops.name, shops.description, shops.owner FROM auctions JOIN shops ON auctions.shopId = shops.id WHERE item = '$itemName'",
+        );
         if (count($res) == 0) {
             $returner["ok"] = false;
             return $returner;
@@ -275,13 +348,13 @@ class Lifecycle extends AppModel
 
         $sumPerPc = 0;
         $sumPerStack = 0;
-        foreach($res as $key => $row) {
+        foreach ($res as $key => $row) {
             $res[$key]["pricePerPc"] = $row["price"] / $row["amount"];
-            $res[$key]["pricePerStack"] = $row["price"] / $row["amount"] * 64;
+            $res[$key]["pricePerStack"] = ($row["price"] / $row["amount"]) * 64;
             $sumPerPc += $res[$key]["pricePerPc"];
             $sumPerStack += $res[$key]["pricePerStack"];
         }
-        usort($res, $this->cmp_pricePerPc('key_b'));
+        usort($res, $this->cmp_pricePerPc("key_b"));
         $returner["data"] = $res;
         $returner["sumPerPc"] = $sumPerPc / count($res);
         $returner["sumPerStack"] = $sumPerStack / count($res);

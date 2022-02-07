@@ -2,19 +2,25 @@
 
 class Auth extends AppModel
 {
-    public function createRootAccount(String $username, String $password) {
-        $this->query("UPDATE `shop_schema` SET `v` = '1' WHERE `k` = 'rootAccountCreated'");
-        
+    public function createRootAccount(string $username, string $password)
+    {
+        $this->query(
+            "UPDATE `shop_schema` SET `v` = '1' WHERE `k` = 'rootAccountCreated'",
+        );
+
         return $this->createAccount($username, $password, "root");
     }
 
-    public function login(String $username, String $password) {
-        $returner = array(
+    public function login(string $username, string $password)
+    {
+        $returner = [
             "success" => true,
-            "error" => ""
+            "error" => "",
+        ];
+
+        $res = $this->query(
+            "SELECT * FROM `users` WHERE `username` = '" . $username . "'",
         );
-        
-        $res = $this->query("SELECT * FROM `users` WHERE `username` = '" . $username . "'");
         if (count($res) == 0) {
             $returner["success"] = false;
             $returner["error"] = "Accound could not be found!";
@@ -25,14 +31,28 @@ class Auth extends AppModel
             $returner["error"] = "Wrong password!";
             return $returner;
         }
-        $returner["role"] = $res[0]["role"]; 
-        $returner["username"] = $res[0]["username"];   
-        $returner["id"] = $res[0]["id"];  
+        $returner["role"] = $res[0]["role"];
+        $returner["username"] = $res[0]["username"];
+        $returner["id"] = $res[0]["id"];
         return $returner;
     }
 
-    public function createAccount (String $username, String $password, String $role) {
-        $this->query("INSERT INTO `users` (`username`, `password`, `role`) VALUES ('" . $username . "', '" . password_hash($password, PASSWORD_DEFAULT) . "', '" . $role . "')");
-        return $this->query("SELECT `id` FROM `users` WHERE `username` = '" . $username . "'");
+    public function createAccount(
+        string $username,
+        string $password,
+        string $role
+    ) {
+        $this->query(
+            "INSERT INTO `users` (`username`, `password`, `role`) VALUES ('" .
+                $username .
+                "', '" .
+                password_hash($password, PASSWORD_DEFAULT) .
+                "', '" .
+                $role .
+                "')",
+        );
+        return $this->query(
+            "SELECT `id` FROM `users` WHERE `username` = '" . $username . "'",
+        );
     }
 }

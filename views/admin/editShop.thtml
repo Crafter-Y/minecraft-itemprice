@@ -1,7 +1,15 @@
 <div class="w-full flex mt-12 justify-center flex-wrap">
-    <h1 class="text-4xl font-bold w-full text-center"><?php echo $shop["name"]; ?></h1>
-    <h2 class="w-full text-center text-lg"><?php echo $shop["description"]; ?></h2>
-    <p class="w-full text-center text-sm">Inhaber: <?php echo $shop["owner"]; ?> | Erstellt von: <?php echo $shop["username"] ?></p>
+    <h1 class="text-4xl font-bold w-full text-center">
+        <?php echo $shop["name"]; ?>
+    </h1>
+    <h2 class="w-full text-center text-lg">
+        <?php echo $shop["description"]; ?>
+    </h2>
+    <p class="w-full text-center text-sm">Inhaber: 
+        <?php echo $shop["owner"]; ?> 
+        | Erstellt von: 
+        <?php echo $shop["username"]; ?>
+    </p>
 
     <div class="w-full flex justify-center mt-12 flex-wrap gap-4">
         <form method="get" class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex gap-2 items-end flex-wrap justify-center">
@@ -18,12 +26,32 @@
 
                 <div>
                     <p class="text-xs">Amount</p>
-                    <input type="number" name="amount" class="input text-lg w-24" min="1" max="1728" value="<?php echo(isset($lastAmount) ? $lastAmount : "1"); ?>">
+                    <input 
+                        type="number" 
+                        name="amount" 
+                        class="input text-lg w-24" 
+                        min="1" 
+                        max="1728" 
+                        value="<?php echo isset($lastAmount)
+                            ? $lastAmount
+                            : "1"; ?>
+                        "
+                    >
                 </div>
 
                 <div>
                     <p class="text-xs">Price</p>
-                    <input type="number" name="price" class="input text-lg w-48" min="0" max="1000000000" value="<?php echo(isset($lastPrice) ? $lastPrice : "1"); ?>">
+                    <input 
+                        type="number" 
+                        name="price" 
+                        class="input text-lg w-48" 
+                        min="0" 
+                        max="1000000000" 
+                        value="<?php echo isset($lastPrice)
+                            ? $lastPrice
+                            : "1"; ?>
+                        "
+                    >
                 </div>
                 
                 <div class="flex items-end">
@@ -47,10 +75,10 @@
             </div>
         </div>
     <?php } ?>
-    <?php if(isset($searchQuery)) { ?>
+    <?php if (isset($searchQuery)) { ?>
         <h2 class="w-full text-3xl font-semibold text-center mt-6">Search results for <?php echo $searchQuery; ?></h2>
     <?php } ?>
-    <?php if(count($shop["auctions"])) { ?>
+    <?php if (count($shop["auctions"])) { ?>
         <!-- Auctions: -->
         <div class="w-full flex justify-center mt-4 pb-10">
             <table class="table table-zebra">
@@ -69,14 +97,25 @@
                     <?php foreach ($shop["auctions"] as $auction) { ?>
                     <tr>
                         <td></td> 
-                        <td class="text-lg"><?php echo $auction["item"]; ?></td> 
-                        <td class="text-lg"><?php echo $auction["amount"]; ?></td> 
-                        <td class="text-lg"><?php echo $auction["price"]; ?></td>
-                        <td class="text-lg"><?php echo $auction["price"]/$auction["amount"] ?></td>
-                        <td class="text-lg"><?php echo $auction["price"]/$auction["amount"]*64 ?></td>
+                        <td class="text-lg"><?php echo $auction[
+                            "item"
+                        ]; ?></td> 
+                        <td class="text-lg"><?php echo $auction[
+                            "amount"
+                        ]; ?></td> 
+                        <td class="text-lg"><?php echo $auction[
+                            "price"
+                        ]; ?></td>
+                        <td class="text-lg"><?php echo $auction["price"] /
+                            $auction["amount"]; ?></td>
+                        <td class="text-lg"><?php echo ($auction["price"] /
+                            $auction["amount"]) *
+                            64; ?></td>
                         <td>
                             <form method="post" class="flex justify-center m-0">
-                                <input type="hidden" name="auctionId" value="<?php echo $auction["id"]; ?>">
+                                <input type="hidden" name="auctionId" value="<?php echo $auction[
+                                    "id"
+                                ]; ?>">
                                 <input type="submit" class="btn text-lg btn-error" name="form3" value="Delete">
                             </form>
                         </td>

@@ -1,0 +1,11 @@
+{
+    "tabWidth": 4,
+    "useTabs": false,
+    "phpVersion": "7.4",
+    "overrides": [
+        {
+            "files": "**/*.thtml",
+            "options": { "parser": "php" }
+        }
+    ]
+}
