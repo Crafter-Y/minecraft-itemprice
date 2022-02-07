@@ -1,6 +1,6 @@
 module.exports = {
   content: [
-    '../../views/**/*.thtml',
+    './views/**/*.thtml',
   ],
   darkMode: "class", // or 'media' or 'class'
   theme: {
