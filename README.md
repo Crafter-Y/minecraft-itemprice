@@ -16,7 +16,7 @@ If you can, setup following Environment Variables:
 -   SetEnv DB_PREFIX ""
 -   SetEnv DB_ENCODING ""
 
-Otherwise, go info config/database.php and fill the Credentials in
+Otherwise, go into config/database.php and fill the Credentials in
 
 ## Install Node.js dependencies
 
@@ -32,12 +32,12 @@ npm run css
 
 # TODO for v1.1.0
 
--   [x] Edit the auction Structure to include
+-   [x] Edit the auction structure to include:
 
     -   [x] Creation Time/Date
-    -   [x] "Not maintained" Label
-    -   [x] "Reliable" Label
-    -   [x] "mostly available" Label
+    -   [x] "not maintained" label
+    -   [x] "reliable" label
+    -   [x] "mostly available" label
     -   [x] Default labels for shops
 
 -   [ ] implement labels
@@ -50,13 +50,13 @@ npm run css
         -   [ ] newest
         -   [ ] lowest
 
--   [ ] Secured API to Insert Auctions
+-   [ ] Secured API to insert auctions
 
 # Info
 
 ## webroot/data/1-18-textures.json
 
-Got the Datalist from [PrismarineJS/minecraft-assets](https://github.com/PrismarineJS/minecraft-assets)
+Got the datalist from [PrismarineJS/minecraft-assets](https://github.com/PrismarineJS/minecraft-assets)
 
 [texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)
 
