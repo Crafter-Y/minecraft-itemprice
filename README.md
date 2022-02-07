@@ -8,13 +8,13 @@ This Web App allows you to monitor Itemprices on a Minecraft Server
 
 If you can, setup following Environment Variables:
 
-- SetEnv DB_DRIVER mysqli
-- SetEnv DB_HOST localhost
-- SetEnv DB_LOGIN root
-- SetEnv DB_PASSWORD ""
-- SetEnv DB_DATABASE forum
-- SetEnv DB_PREFIX ""
-- SetEnv DB_ENCODING ""
+-   SetEnv DB_DRIVER mysqli
+-   SetEnv DB_HOST localhost
+-   SetEnv DB_LOGIN root
+-   SetEnv DB_PASSWORD ""
+-   SetEnv DB_DATABASE forum
+-   SetEnv DB_PREFIX ""
+-   SetEnv DB_ENCODING ""
 
 Otherwise, go info config/database.php and fill the Credentials in
 
@@ -30,27 +30,27 @@ npm i
 npm run css
 ```
 
-# TODO
+# TODO for v1.1.0
 
-- [ ] Edit the auction Structure to include
+-   [x] Edit the auction Structure to include
 
-  - [ ] Auction Lifetime
-  - [ ] Creation Time/Date
-  - [ ] "Not maintained" Label
-  - [ ] "Reliable" Label
-  - [ ] "mostly available" Label
+    -   [x] Creation Time/Date
+    -   [x] "Not maintained" Label
+    -   [x] "Reliable" Label
+    -   [x] "mostly available" Label
+    -   [x] Default labels for shops
 
-- [ ] Default label for shop
-- [ ] include lowest auction price in main/index
-- [ ] include auctions in main/view
+-   [ ] implement labels
+-   [ ] include lowest auction price in main/index
+-   [ ] include auctions in main/view
 
-  - [ ] slideshow
-  - [ ] filter options
+    -   [ ] slideshow
+    -   [ ] filter options
 
-    - [ ] newest
-    - [ ] lowest
+        -   [ ] newest
+        -   [ ] lowest
 
-- [ ] Secured API to Insert Auctions
+-   [ ] Secured API to Insert Auctions
 
 # Info
 

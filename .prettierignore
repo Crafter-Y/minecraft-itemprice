@@ -1,3 +1,9 @@
 ./lib/**/*.*
 
 ./webroot/**/*.css
+
+./cron.php
+
+./compile.php
+
+./webroot/index.php
