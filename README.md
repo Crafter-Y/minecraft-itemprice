@@ -60,7 +60,7 @@ Got the Datalist from [PrismarineJS/minecraft-assets](https://github.com/Prismar
 
 [texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)
 
-I removed duplicate Entrys that are not needed for my Application
+I removed duplicate entrys that are not needed for my application.
 
 # Contribute
 
