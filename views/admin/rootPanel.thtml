@@ -40,7 +40,44 @@
             <?php } ?>
             <input class="input text-lg w-full mb-2 mt-2" name="name" type="text" placeholder="Name" /><br />
             <input class="input text-lg w-full mb-2" name="description" type="text" placeholder="Description" /><br />
-            <input class="input text-lg w-full mb-3" name="owner" type="text" placeholder="Owner" /><br />
+            <input class="input text-lg w-full" name="owner" type="text" placeholder="Owner" /><br />
+            
+            <div class="flex items-center mt-2 gap-2">
+			    <input 
+                    type="checkbox" 
+                    name="notMaintained" 
+                    class="checkbox" 
+                >
+                <span>Not Maintained</span>
+            </div>
+
+            <div class="flex items-center mt-2 gap-2">
+                <input 
+                    type="checkbox" 
+                    name="reliable" 
+                    class="checkbox" 
+                > 
+                <span>Reliable</span>
+            </div>
+
+            <div class="flex items-center mt-2 gap-2">
+                <input 
+                    type="checkbox" 
+                    name="mostlyAvailable"
+                    class="checkbox" 
+                > 
+                <span>Mostly Available</span>
+            </div>
+
+            <div class="flex items-center mt-2 gap-2 mb-3">
+                <input 
+                    type="checkbox" 
+                    name="limited"
+                    class="checkbox" 
+                > 
+                <span>Limited</span>
+            </div>
+            
             <input class="btn btn-info w-full" type="submit" name="form2" value="Create Shop">
             <?php if (isset($success2)) { ?>
                 <div class="w-full flex justify-center mt-4">

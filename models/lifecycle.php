@@ -109,16 +109,38 @@ class Lifecycle extends AppModel
         $this->checkShopsTable();
         $this->checkAuctionsTable();
         $res = $this->query(
-            "SELECT shops.name, shops.id, shops.description, shops.creator, shops.owner, COUNT(auctions.id) FROM shops LEFT JOIN auctions On shops.id = auctions.shopId GROUP BY shops.name",
+            "SELECT 
+                shops.name, 
+                shops.id, 
+                shops.description, 
+                shops.creator, 
+                shops.owner, 
+                shops.defaultNotMaintained, 
+                shops.defaultReliable, 
+                shops.defaultMostlyAvailable, 
+                shops.isLimited, 
+                COUNT(auctions.id) 
+            FROM shops 
+            LEFT JOIN auctions On 
+                shops.id = auctions.shopId 
+            GROUP BY shops.name",
         );
         return $res;
     }
 
-    public function createShop($name, $description, $creator, $owner)
-    {
+    public function createShop(
+        $name,
+        $description,
+        $creator,
+        $owner,
+        $defaultNotMaintained,
+        $defaultReliable,
+        $defaultMostlyAvailable,
+        $isLimited
+    ) {
         $this->checkShopsTable();
-        return $this->query(
-            "INSERT INTO shops (name, description, creator, owner) VALUES ('$name', '$description', '$creator', '$owner')",
+        $this->query(
+            "INSERT INTO shops (name, description, creator, owner, defaultNotMaintained, defaultReliable, defaultMostlyAvailable, isLimited) VALUES ('$name', '$description', '$creator', '$owner', '$defaultNotMaintained', '$defaultReliable', '$defaultMostlyAvailable', '$isLimited')",
         );
     }
 
@@ -127,7 +149,7 @@ class Lifecycle extends AppModel
         $this->checkShopsTable();
         $this->checkUsersTable();
         $res = $this->query(
-            "SELECT name, description, owner, username FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'",
+            "SELECT name, description, owner, username, defaultNotMaintained, defaultReliable, defaultMostlyAvailable, isLimited FROM shops JOIN users ON creator=users.id WHERE shops.id = '$id'",
         );
         if (count($res) == 0) {
             return false;
@@ -302,11 +324,28 @@ class Lifecycle extends AppModel
         return true;
     }
 
-    public function configureShop($shopId, $name, $description, $owner)
-    {
+    public function configureShop(
+        $shopId,
+        $name,
+        $description,
+        $owner,
+        $notMaintained,
+        $reliable,
+        $mostlyAvailable,
+        $limited
+    ) {
         $this->checkShopsTable();
         $this->query(
-            "UPDATE shops SET name = '$name', description = '$description', owner = '$owner' WHERE id = '$shopId'",
+            "UPDATE shops SET 
+                name = '$name', 
+                description = '$description', 
+                owner = '$owner', 
+                defaultNotMaintained = '$notMaintained', 
+                defaultReliable = '$reliable',
+                defaultMostlyAvailable = '$mostlyAvailable',
+                isLimited = '$limited'
+            
+            WHERE id = '$shopId'",
         );
     }
 

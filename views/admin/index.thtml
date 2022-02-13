@@ -36,8 +36,21 @@
                 </td>
                 <td>
                     <a href="/admin/editShop/<?php echo $shop["id"]; ?>">
-                    <!-- TODO: Add Label View -->
-                    <?php echo "-"; ?>
+                        <?php if ($shop["defaultNotMaintained"]) { ?>
+                            <div class="badge">Not Maintained</div>
+                        <?php } ?>
+
+                        <?php if ($shop["defaultReliable"]) { ?>
+                            <div class="badge">Reliable</div>
+                        <?php } ?>
+
+                        <?php if ($shop["defaultMostlyAvailable"]) { ?>
+                            <div class="badge">Mostly Available</div>
+                        <?php } ?>
+
+                        <?php if ($shop["isLimited"]) { ?>
+                            <div class="badge">Limited</div>
+                        <?php } ?>
                     </a>
                 </td>
                 <?php if ($canEditShop) { ?>

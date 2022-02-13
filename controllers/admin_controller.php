@@ -125,12 +125,20 @@ class AdminController extends AppController
             $name = $this->params["form"]["name"];
             $description = $this->params["form"]["description"];
             $owner = $this->params["form"]["owner"];
+            $notMaintained = isset($this->params["form"]["notMaintained"]);
+            $reliable = isset($this->params["form"]["reliable"]);
+            $mostlyAvailable = isset($this->params["form"]["mostlyAvailable"]);
+            $limited = isset($this->params["form"]["limited"]);
 
             $this->Lifecycle->createShop(
                 $name,
                 $description,
                 $this->Session->read("userId"),
                 $owner,
+                $notMaintained,
+                $reliable,
+                $mostlyAvailable,
+                $limited,
             );
             $this->set("success2", "Shop created!");
         }
@@ -242,11 +250,19 @@ class AdminController extends AppController
             $name = $this->params["form"]["name"];
             $description = $this->params["form"]["description"];
             $owner = $this->params["form"]["owner"];
+            $notMaintained = isset($this->params["form"]["notMaintained"]);
+            $reliable = isset($this->params["form"]["reliable"]);
+            $mostlyAvailable = isset($this->params["form"]["mostlyAvailable"]);
+            $limited = isset($this->params["form"]["limited"]);
             $this->Lifecycle->configureShop(
                 $shopId,
                 $name,
                 $description,
                 $owner,
+                $notMaintained,
+                $reliable,
+                $mostlyAvailable,
+                $limited,
             );
         }
 

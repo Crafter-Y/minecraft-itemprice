@@ -34,6 +34,50 @@
             placeholder="Shop Owner" 
             value="<?php echo $shop["owner"]; ?>"
         />
+		<div class="flex items-center mt-2 gap-2">
+			<input 
+				type="checkbox" 
+				name="notMaintained" 
+				class="checkbox" 
+				<?php if ($shop["defaultNotMaintained"]) {
+        echo "checked='checked'";
+    } ?>> 
+			<span>Not Maintained</span>
+		</div>
+
+		<div class="flex items-center mt-2 gap-2">
+			<input 
+				type="checkbox" 
+				name="reliable" 
+				class="checkbox" 
+				<?php if ($shop["defaultReliable"]) {
+        echo "checked='checked'";
+    } ?>> 
+			<span>Reliable</span>
+		</div>
+
+		<div class="flex items-center mt-2 gap-2">
+			<input 
+				type="checkbox" 
+				name="mostlyAvailable"
+				class="checkbox" 
+				<?php if ($shop["defaultMostlyAvailable"]) {
+        echo "checked='checked'";
+    } ?>> 
+			<span>Mostly Available</span>
+		</div>
+
+		<div class="flex items-center mt-2 gap-2">
+			<input 
+				type="checkbox" 
+				name="limited"
+				class="checkbox" 
+				<?php if ($shop["isLimited"]) {
+        echo "checked='checked'";
+    } ?>> 
+			<span>Limited</span>
+		</div>
+		
 		<input
 			type="submit"
 			name="form1"
