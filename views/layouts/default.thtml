@@ -13,13 +13,13 @@
     <div class="navbar bg-gray-800 justify-between overflow-hidden">
         <div class="gap-4">
             <a href="/main/index"><button class="btn btn-sm text-lg bg-gray-800">Home</button></a>
-            <a href="/admin/index"><button class="btn btn-sm text-lg bg-gray-800">Admin Panel</button></a>
+            <a href="/admin/index" class="hidden md:block"><button class="btn btn-sm text-lg bg-gray-800">Admin Panel</button></a>
         </div>
         <div class="gap-4">
             <?php if (isset($loggedIn) && $loggedIn) { ?>
-                <p class="text-xl"><?php echo $username; ?></p>
+                <p class="text-xl hidden md:block"><?php echo $username; ?></p>
                 <?php if ($role == "root") { ?>
-                    <a href="/admin/rootPanel"><button class="btn btn-sm text-lg bg-gray-800">Page Settings</button></a>
+                    <a href="/admin/rootPanel"><button class="btn btn-sm text-lg bg-gray-800 hidden md:block">Page Settings</button></a>
                 <?php } ?>
                 <a href="/main/logout"><button class="btn btn-sm text-lg bg-gray-800">Logout</button></a>
             <?php } ?>
