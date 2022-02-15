@@ -125,7 +125,7 @@ class MainController extends AppController
         }
         $this->set("item", $itemName);
         $content = $this->Lifecycle->getView($itemName);
-        if (!$content) {
+        if (!$content["ok"]) {
             $this->redirect("main/index");
         }
 
