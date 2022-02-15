@@ -2,7 +2,7 @@ module.exports = {
   content: [
     './views/**/*.thtml',
   ],
-  darkMode: "class", // or 'media' or 'class'
+  darkMode: "class",
   theme: {
     extend: {},
   },

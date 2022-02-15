@@ -170,7 +170,9 @@ class Lifecycle extends AppModel
     {
         $this->checkAuctionsTable();
         $res = $this->query(
-            "SELECT item, price, amount, id FROM auctions WHERE shopId = '$shopId'",
+            "SELECT item, price, amount, id, notMaintained, reliable, mostlyAvailable 
+            FROM auctions 
+            WHERE shopId = '$shopId'",
         );
 
         if ($searchQuery) {
@@ -198,7 +200,17 @@ class Lifecycle extends AppModel
     {
         $this->checkAuctionsTable();
         $res = $this->query(
-            "INSERT INTO auctions (item, price, shopId, creator, amount) VALUES ('$item', '$price', '$shopId', '$creator', '$amount')",
+            "INSERT INTO auctions (item, price, shopId, creator, amount, notMaintained, reliable, mostlyAvailable) VALUES 
+            (
+                '$item', 
+                '$price', 
+                '$shopId', 
+                '$creator', 
+                '$amount',
+                (SELECT defaultNotMaintained FROM shops WHERE id = '$shopId'),
+                (SELECT defaultReliable FROM shops WHERE id = '$shopId'),
+                (SELECT defaultMostlyAvailable FROM shops WHERE id = '$shopId')
+            )",
         );
 
         $this->updateTrendingCache();
@@ -399,5 +411,32 @@ class Lifecycle extends AppModel
         $returner["sumPerStack"] = $sumPerStack / count($res);
 
         return $returner;
+    }
+
+    public function setAuctionReliable($auctionId, $reliable)
+    {
+        $reliable = $reliable ? false : true;
+        $this->checkAuctionsTable();
+        $this->query(
+            "UPDATE auctions SET reliable = '$reliable' WHERE id = '$auctionId'",
+        );
+    }
+
+    public function setAuctionNotMaintained($auctionId, $notMaintained)
+    {
+        $notMaintained = $notMaintained ? false : true;
+        $this->checkAuctionsTable();
+        $this->query(
+            "UPDATE auctions SET notMaintained = '$notMaintained' WHERE id = '$auctionId'",
+        );
+    }
+
+    public function setAuctionMostlyAvailable($auctionId, $mostlyAvailable)
+    {
+        $mostlyAvailable = $mostlyAvailable ? false : true;
+        $this->checkAuctionsTable();
+        $this->query(
+            "UPDATE auctions SET mostlyAvailable = '$mostlyAvailable' WHERE id = '$auctionId'",
+        );
     }
 }

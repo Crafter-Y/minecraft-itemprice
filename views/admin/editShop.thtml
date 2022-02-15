@@ -34,8 +34,7 @@
                         max="1728" 
                         value="<?php echo isset($lastAmount)
                             ? $lastAmount
-                            : "1"; ?>
-                        "
+                            : "1"; ?>"
                     >
                 </div>
 
@@ -49,8 +48,7 @@
                         max="1000000000" 
                         value="<?php echo isset($lastPrice)
                             ? $lastPrice
-                            : "1"; ?>
-                        "
+                            : "1"; ?>"
                     >
                 </div>
                 
@@ -80,7 +78,7 @@
     <?php } ?>
     <?php if (count($shop["auctions"])) { ?>
         <!-- Auctions: -->
-        <div class="w-full flex justify-center mt-4 pb-10">
+        <div class="w-full flex justify-center mt-4 pb-10 overflow-x-scroll md:overflow-x-auto">
             <table class="table table-zebra">
                 <thead>
                     <tr>
@@ -90,6 +88,7 @@
                         <th class="text-lg">Price</th>
                         <th class="text-lg">per 1pcs.</th>
                         <th class="text-lg">per Stack</th>
+                        <th class="text-lg">Labels</th>
                         <th></th> 
                     </tr>
                 </thead> 
@@ -111,6 +110,40 @@
                         <td class="text-lg"><?php echo ($auction["price"] /
                             $auction["amount"]) *
                             64; ?></td>
+                        <td>
+                            <form method="post" class="flex flex-wrap w-min gap-1">
+                                <input type="hidden" name="auctionId" value="<?php echo $auction[
+                                    "id"
+                                ]; ?>">
+                                <input type="hidden" name="reliable" value="<?php echo $auction[
+                                    "reliable"
+                                ]; ?>">
+                                <input type="hidden" name="mostlyAvailable" value="<?php echo $auction[
+                                    "mostlyAvailable"
+                                ]; ?>">
+                                <input type="hidden" name="notMaintained" value="<?php echo $auction[
+                                    "notMaintained"
+                                ]; ?>">
+                                <?php if (!$auction["reliable"]) { ?>
+                                    <input type="submit" class="btn btn-xs" name="reliableBtn" value="reliable">
+                                <?php } else { ?>
+                                    <input type="submit" class="btn btn-xs btn-info" name="reliableBtn" value="reliable">
+                                <?php } ?>
+
+                                <?php if (!$auction["mostlyAvailable"]) { ?>
+                                    <input type="submit" class="btn btn-xs" name="mostlyAvailableBtn" value="mostly available">
+                                <?php } else { ?>
+                                    <input type="submit" class="btn btn-xs btn-info" name="mostlyAvailableBtn" value="mostly available">
+                                <?php } ?>  
+
+                                <?php if (!$auction["notMaintained"]) { ?>
+                                    <input type="submit" class="btn btn-xs" name="notMaintainedBtn" value="not maintained">
+                                <?php } else { ?>
+                                    <input type="submit" class="btn btn-xs btn-info" name="notMaintainedBtn" value="not maintained">
+                                <?php } ?>  
+                                
+                            </form>
+                        </td>
                         <td>
                             <form method="post" class="flex justify-center m-0">
                                 <input type="hidden" name="auctionId" value="<?php echo $auction[

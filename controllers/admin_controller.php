@@ -215,6 +215,33 @@ class AdminController extends AppController
             $this->Lifecycle->deleteAuction($auctionId);
             $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
         }
+
+        if (isset($this->params["form"]["reliableBtn"])) {
+            $auctionId = $this->params["form"]["auctionId"];
+            $relibale = $this->params["form"]["reliable"];
+            $this->Lifecycle->setAuctionReliable($auctionId, $relibale);
+            $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
+        }
+
+        if (isset($this->params["form"]["mostlyAvailableBtn"])) {
+            $auctionId = $this->params["form"]["auctionId"];
+            $mostlyAvailable = $this->params["form"]["mostlyAvailable"];
+            $this->Lifecycle->setAuctionMostlyAvailable(
+                $auctionId,
+                $mostlyAvailable,
+            );
+            $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
+        }
+
+        if (isset($this->params["form"]["notMaintainedBtn"])) {
+            $auctionId = $this->params["form"]["auctionId"];
+            $notMaintained = $this->params["form"]["notMaintained"];
+            $this->Lifecycle->setAuctionNotMaintained(
+                $auctionId,
+                $notMaintained,
+            );
+            $shop = $this->Lifecycle->getShop($shopId, $searchQuery);
+        }
         $this->set("shop", $shop);
     }
 
