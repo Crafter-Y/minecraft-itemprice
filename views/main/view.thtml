@@ -7,22 +7,22 @@
     </div>
 
     <div class="mt-6 bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex">
-        <div>
+        <div class="hidden md:block">
             <p class="text-center text-sm">Lowest</p>
             <p class="text-2xl text-center">Price per Piece</p>
             <p class="text-center my-4 text-3xl price">
                 <?php echo $content["data"][0]["pricePerPc"]; ?>
             </p>
         </div>
-        <div class="divider divider-vertical"></div>
-        <div>
+        <div class="divider divider-vertical hidden md:flex"></div>
+        <div class="hidden md:block">
             <p class="text-center text-sm">Lowest</p>
             <p class="text-2xl text-center">Price per Stack (64)</p>
             <p class="text-center my-4 text-3xl price">
                 <?php echo $content["data"][0]["pricePerStack"]; ?>
             </p>
         </div>
-        <div class="divider divider-vertical"></div>
+        <div class="divider divider-vertical hidden md:flex"></div>
         <div>
             <p class="text-center text-sm">Avarage</p>
             <p class="text-2xl text-center">Price per Piece</p>
@@ -39,15 +39,15 @@
             </p>
         </div>
     </div>
-    <div class="w-full flex justify-center mt-4 pb-10 overflow-x-scroll md:overflow-auto">
+    <div class="w-full flex justify-center mt-4 pb-10 md:overflow-auto">
             <table class="table table-zebra">
                 <thead>
                     <tr>
                         <th class="text-lg">Original Price</th> 
-                        <th class="text-lg">Price per Piece</th> 
-                        <th class="text-lg">Price per Stack (64)</th> 
-                        <th class="text-lg">Shop</th> 
-                        <th class="text-lg">Shop Owner</th> 
+                        <th class="text-lg hidden lg:table-cell">Price per Piece</th> 
+                        <th class="text-lg hidden lg:table-cell">Price per Stack (64)</th> 
+                        <th class="text-lg hidden md:table-cell">Shop</th> 
+                        <th class="text-lg hidden md:table-cell">Shop Owner</th> 
                         <th class="text-lg">Shop Description</th> 
                     </tr>
                 </thead> 
@@ -60,16 +60,16 @@
                             </p> 
                             <span> (<?php echo $row["amount"]; ?>)</span>
                         </td>
-                        <td class="text-lg price">
+                        <td class="text-lg price hidden lg:table-cell">
                             <?php echo $row["pricePerPc"]; ?>
                         </td>  
-                        <td class="text-lg price">
+                        <td class="text-lg price hidden lg:table-cell">
                             <?php echo $row["pricePerStack"]; ?>
                         </td>  
-                        <td class="text-lg">
+                        <td class="text-lg hidden md:table-cell">
                             <?php echo $row["name"]; ?>
                         </td> 
-                        <td class="text-lg">
+                        <td class="text-lg hidden md:table-cell">
                             <?php echo $row["owner"]; ?>
                         </td>
                         <td class="text-lg">
