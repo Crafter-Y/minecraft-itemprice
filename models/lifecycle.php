@@ -390,7 +390,21 @@ class Lifecycle extends AppModel
         $returner = ["ok" => true];
 
         $res = $this->query(
-            "SELECT auctions.price, auctions.amount, auctions.shopId, shops.name, shops.description, shops.owner FROM auctions JOIN shops ON auctions.shopId = shops.id WHERE item = '$itemName'",
+            "SELECT 
+                auctions.price, 
+                auctions.amount, 
+                auctions.shopId, 
+                auctions.notMaintained, 
+                auctions.reliable, 
+                auctions.mostlyAvailable, 
+
+                shops.name, 
+                shops.description, 
+                shops.owner, 
+                shops.isLimited 
+            FROM auctions 
+            JOIN shops ON auctions.shopId = shops.id 
+            WHERE item = '$itemName'",
         );
         if (count($res) == 0) {
             $returner["ok"] = false;

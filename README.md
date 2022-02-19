@@ -40,7 +40,7 @@ npm run css
     -   [x] "mostly available" label
     -   [x] Default labels for shops
 
--   [ ] implement labels
+-   [x] implement labels
 -   [ ] include lowest auction price in main/index
 -   [ ] include auctions in main/view
 

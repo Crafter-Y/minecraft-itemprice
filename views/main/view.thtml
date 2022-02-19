@@ -47,18 +47,21 @@
                         <th class="text-lg hidden lg:table-cell">Price per Piece</th> 
                         <th class="text-lg hidden lg:table-cell">Price per Stack (64)</th> 
                         <th class="text-lg hidden md:table-cell">Shop</th> 
-                        <th class="text-lg hidden md:table-cell">Shop Owner</th> 
-                        <th class="text-lg">Shop Description</th> 
+                        <th class="text-lg hidden xl:table-cell">Shop Owner</th> 
+                        <th class="text-lg hidden sm:table-cell">Shop Description</th> 
+                        <th class="text-lg">State</th> 
                     </tr>
                 </thead> 
                 <tbody id="table">
                     <?php foreach ($content["data"] as $row) { ?>
                     <tr>
-                        <td class="text-lg flex gap-2">
-                            <p class="price">
-                                <?php echo $row["price"]; ?>
-                            </p> 
-                            <span> (<?php echo $row["amount"]; ?>)</span>
+                        <td class="text-lg">
+                            <div class="flex gap-2">
+                                <p class="price">
+                                    <?php echo $row["price"]; ?>
+                                </p> 
+                                <span> (<?php echo $row["amount"]; ?>)</span>
+                            </div>
                         </td>
                         <td class="text-lg price hidden lg:table-cell">
                             <?php echo $row["pricePerPc"]; ?>
@@ -69,12 +72,27 @@
                         <td class="text-lg hidden md:table-cell">
                             <?php echo $row["name"]; ?>
                         </td> 
-                        <td class="text-lg hidden md:table-cell">
+                        <td class="text-lg hidden xl:table-cell">
                             <?php echo $row["owner"]; ?>
                         </td>
-                        <td class="text-lg">
+                        <td class="text-lg hidden sm:table-cell">
                             <?php echo $row["description"]; ?>
                         </td>  
+                        <td class="text-lg">
+                            <div class="flex flex-wrap w-min gap-1">
+                            <?php if ($row["notMaintained"]) { ?>
+                                <div class="badge">Not Maintained</div>
+                            <?php } ?>
+
+                            <?php if ($row["reliable"]) { ?>
+                                <div class="badge">Reliable</div>
+                            <?php } ?>
+
+                            <?php if ($row["mostlyAvailable"]) { ?>
+                                <div class="badge">Mostly Available</div>
+                            <?php } ?>
+                            </div> 
+                        </td> 
                     </tr>
                     <?php } ?>
                 </tbody>
