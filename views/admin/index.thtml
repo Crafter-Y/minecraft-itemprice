@@ -1,5 +1,5 @@
-<div class="w-full flex justify-center mt-12 flex-wrap">
-    <h1 class="text-3xl font-bold w-full text-center">Shops</h1>
+<div class="w-full flex justify-center mt-12 flex-wrap pb-12 print:mt-0 print:bg-gray-700 print:pb-32">
+    <h1 class="text-3xl font-bold w-full text-center print:text-left print:ml-2 print:mt-2">Shops</h1>
     <?php if (count($shops) == 0) { ?>
         <p class="text-xl font-bold text-center w-full mt-6">No shops found.</p>
         <p>New Shops can be created in the Page Settings. You need Permisson Level `root` to create new shops.</p>
@@ -12,7 +12,7 @@
                 <th>Auctions</th> 
                 <th>Labels</th>
                 <?php if ($canEditShop) { ?>
-                <th></th>
+                <th class="print:hidden"></th>
                 <?php } ?>
             </tr>
         </thead> 
@@ -54,7 +54,7 @@
                     </a>
                 </td>
                 <?php if ($canEditShop) { ?>
-                    <td>
+                    <td class="print:hidden">
                         <a href="/admin/configureShop/<?php echo $shop[
                             "id"
                         ]; ?>">
