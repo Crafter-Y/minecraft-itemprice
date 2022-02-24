@@ -125,10 +125,14 @@ class AdminController extends AppController
             $name = $this->params["form"]["name"];
             $description = $this->params["form"]["description"];
             $owner = $this->params["form"]["owner"];
-            $notMaintained = isset($this->params["form"]["notMaintained"]);
-            $reliable = isset($this->params["form"]["reliable"]);
-            $mostlyAvailable = isset($this->params["form"]["mostlyAvailable"]);
-            $limited = isset($this->params["form"]["limited"]);
+            $notMaintained = isset($this->params["form"]["notMaintained"])
+                ? 1
+                : 0;
+            $reliable = isset($this->params["form"]["reliable"]) ? 1 : 0;
+            $mostlyAvailable = isset($this->params["form"]["mostlyAvailable"])
+                ? 1
+                : 0;
+            $limited = isset($this->params["form"]["limited"]) ? 1 : 0;
 
             $this->Lifecycle->createShop(
                 $name,

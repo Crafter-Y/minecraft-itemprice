@@ -437,7 +437,7 @@ class Lifecycle extends AppModel
 
     public function setAuctionReliable($auctionId, $reliable)
     {
-        $reliable = $reliable ? false : true;
+        $reliable = $reliable ? 0 : 1;
         $this->checkAuctionsTable();
         $this->query(
             "UPDATE auctions SET reliable = '$reliable' WHERE id = '$auctionId'",
@@ -446,7 +446,7 @@ class Lifecycle extends AppModel
 
     public function setAuctionNotMaintained($auctionId, $notMaintained)
     {
-        $notMaintained = $notMaintained ? false : true;
+        $notMaintained = $notMaintained ? 0 : 1;
         $this->checkAuctionsTable();
         $this->query(
             "UPDATE auctions SET notMaintained = '$notMaintained' WHERE id = '$auctionId'",
@@ -455,7 +455,7 @@ class Lifecycle extends AppModel
 
     public function setAuctionMostlyAvailable($auctionId, $mostlyAvailable)
     {
-        $mostlyAvailable = $mostlyAvailable ? false : true;
+        $mostlyAvailable = $mostlyAvailable ? 0 : 1;
         $this->checkAuctionsTable();
         $this->query(
             "UPDATE auctions SET mostlyAvailable = '$mostlyAvailable' WHERE id = '$auctionId'",
