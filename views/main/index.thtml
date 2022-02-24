@@ -18,6 +18,14 @@
             } ?>>
             <p>Alphanumerical</p>
         </div>
+        <div class="mt-4 flex gap-2 items-center">
+            <input type="checkbox" name="includeLimited" value="includeLimited" class="radio radio-lg" <?php if (
+                isset($includeLimited)
+            ) {
+                echo "checked='checked'";
+            } ?>>
+            <p>Include Limited Auctions</p>
+        </div>
     </form>
 
     <?php if ($sortation == "trending") { ?>

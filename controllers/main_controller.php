@@ -43,11 +43,15 @@ class MainController extends AppController
         $sortation = false;
         $sorttype = "trending";
         $search = false;
+        $includeLimited = false;
 
         if (isset($this->params["form"]["form1"])) {
             if (isset($this->params["form"]["sorting"])) {
                 $sortation = $this->params["form"]["sorting"];
                 $sorttype = $this->params["form"]["sorting"];
+                $includeLimited = isset(
+                    $this->params["form"]["includeLimited"],
+                );
 
                 if (
                     isset($this->params["form"]["search"]) &&
@@ -56,12 +60,16 @@ class MainController extends AppController
                     $search = $this->params["form"]["search"];
                     $this->set("search", $search);
                 }
+
+                if ($includeLimited) {
+                    $this->set("includeLimited", true);
+                }
             }
         }
         $this->set("sortation", $sorttype);
         $this->set(
             "content",
-            $this->Lifecycle->getTrending($sortation, $search),
+            $this->Lifecycle->getTrending($sortation, $search, $includeLimited),
         );
     }
 

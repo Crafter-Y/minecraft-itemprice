@@ -41,7 +41,7 @@ npm run css
     -   [x] Default labels for shops
 
 -   [x] implement labels
--   [ ] include lowest auction price in main/index
+-   [x] include lowest auction price in main/index
 -   [ ] include auctions in main/view
 
     -   [ ] slideshow

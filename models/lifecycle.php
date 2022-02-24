@@ -91,6 +91,18 @@ class Lifecycle extends AppModel
         }
     }
 
+    private function checkTrendingIncludingLimitedTable()
+    {
+        $res = $this->query("SHOW TABLES LIKE 'trendingIncludingLimited'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE trendingIncludingLimited (
+                item VARCHAR(64) NOT NULL,
+                count INT NOT NULL,
+                minPrice DOUBLE(20, 2) NOT NULL
+            )");
+        }
+    }
+
     public function getInitialInformationTable()
     {
         $this->checkShopSchemaTable();
@@ -274,13 +286,36 @@ class Lifecycle extends AppModel
     private function updateTrendingCache()
     {
         $this->checkTrendingTable();
+        $this->checkTrendingIncludingLimitedTable();
         $this->query("TRUNCATE TABLE trending");
+        $this->query("TRUNCATE TABLE trendingIncludingLimited");
         $res = $this->query(
-            "SELECT item, COUNT(item) AS count, MIN(price / amount) AS minPrice FROM `auctions` GROUP BY item",
+            "SELECT 
+                item, 
+                COUNT(item) AS count, 
+                MIN(price / amount) AS minPrice 
+            FROM `auctions` 
+            INNER JOIN `shops` ON auctions.shopId = shops.id 
+            WHERE shops.isLimited != 1 
+            GROUP BY item",
         );
         foreach ($res as $entry) {
             $this->query(
                 "INSERT INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
+            );
+        }
+
+        $res = $this->query(
+            "SELECT 
+                item, 
+                COUNT(item) AS count, 
+                MIN(price / amount) AS minPrice 
+            FROM `auctions` 
+            GROUP BY item",
+        );
+        foreach ($res as $entry) {
+            $this->query(
+                "INSERT INTO trendingIncludingLimited (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
             );
         }
     }
@@ -292,10 +327,17 @@ class Lifecycle extends AppModel
         };
     }
 
-    public function getTrending($sortation, $searchQuery)
+    public function getTrending($sortation, $searchQuery, $includeLimited)
     {
-        $this->checkTrendingTable();
-        $res = $this->query("SELECT * FROM trending");
+        if ($includeLimited) {
+            $this->checkTrendingIncludingLimitedTable();
+            $res = $this->query(
+                "SELECT item, count, minPrice FROM trendingIncludingLimited",
+            );
+        } else {
+            $this->checkTrendingTable();
+            $res = $this->query("SELECT item, count, minPrice FROM trending");
+        }
         if ($sortation) {
             if ($sortation == "trending") {
                 usort($res, $this->cmp_count("key_b"));
@@ -367,6 +409,7 @@ class Lifecycle extends AppModel
             
             WHERE id = '$shopId'",
         );
+        $this->updateTrendingCache();
     }
 
     public function setAdminAllowedToEditShop($state)
