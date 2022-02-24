@@ -28,6 +28,10 @@ class Lifecycle extends AppModel
                 description TEXT NOT NULL,
                 creator int NOT NULL,
                 owner varchar(24) NOT NULL,
+                defaultNotMaintained BOOLEAN DEFAULT false,
+                defaultReliable BOOLEAN DEFAULT false,
+                defaultMostlyAvailable BOOLEAN DEFAULT false,
+                isLimited BOOLEAN DEFAULT false,
                 PRIMARY KEY (id),
                 UNIQUE (name)
             )");
@@ -47,6 +51,10 @@ class Lifecycle extends AppModel
                 shopId INT NOT NULL,
                 creator INT NOT NULL,
                 amount INT NOT NULL,
+                timeCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+                notMaintained BOOLEAN DEFAULT false,
+                reliable BOOLEAN DEFAULT false,
+                mostlyAvailable BOOLEAN DEFAULT false,
                 PRIMARY KEY (id)
             )");
             return false;
