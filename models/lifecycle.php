@@ -47,6 +47,7 @@ class Lifecycle extends AppModel
             $this->query("CREATE TABLE auctions (
                 id INT NOT NULL AUTO_INCREMENT,
                 item VARCHAR(64) NOT NULL,
+                identifier VARCHAR(64) DEFAULT NULL,
                 price DOUBLE(20, 2) NOT NULL,
                 shopId INT NOT NULL,
                 creator INT NOT NULL,
@@ -55,7 +56,17 @@ class Lifecycle extends AppModel
                 notMaintained BOOLEAN DEFAULT false,
                 reliable BOOLEAN DEFAULT false,
                 mostlyAvailable BOOLEAN DEFAULT false,
-                PRIMARY KEY (id)
+                unique_md5 CHAR(32) AS 
+                    (
+                        MD5(
+                            CONCAT_WS('X', 
+                                timeCreated,
+                                ifnull(identifier, 0)
+                            )
+                        )
+                    ),
+                PRIMARY KEY (id),
+                UNIQUE (unique_md5)
             )");
             return false;
         }
@@ -99,6 +110,19 @@ class Lifecycle extends AppModel
                 item VARCHAR(64) NOT NULL,
                 count INT NOT NULL,
                 minPrice DOUBLE(20, 2) NOT NULL
+            )");
+        }
+    }
+
+    private function checkTokensTable()
+    {
+        $res = $this->query("SHOW TABLES LIKE 'tokens'");
+        if (count($res) == 0) {
+            $this->query("CREATE TABLE tokens (
+                token VARCHAR(24) NOT NULL,
+                shop INT NOT NULL,
+                creator INT NOT NULL,
+                PRIMARY KEY (token)
             )");
         }
     }
@@ -503,5 +527,91 @@ class Lifecycle extends AppModel
         $this->query(
             "UPDATE auctions SET mostlyAvailable = '$mostlyAvailable' WHERE id = '$auctionId'",
         );
+    }
+
+    public function getTokens($shopId)
+    {
+        $this->checkTokensTable();
+        $res = $this->query("SELECT token FROM tokens WHERE shop = '$shopId'");
+        if (count($res) == 0) {
+            return [];
+        }
+        return $res;
+    }
+
+    public function generateToken($shopId, $userId)
+    {
+        $this->checkTokensTable();
+        $token = bin2hex(random_bytes(24));
+
+        $this->query(
+            "INSERT INTO tokens (token, shop, creator) VALUES ('$token', '$shopId', '$userId')",
+        );
+        return $token;
+    }
+
+    public function deleteToken($token)
+    {
+        $this->checkTokensTable();
+        $this->query("DELETE FROM tokens WHERE token = '$token'");
+    }
+
+    public function validateToken($token)
+    {
+        $this->checkTokensTable();
+        $res = $this->query("SELECT * FROM tokens WHERE token = '$token'");
+        if (count($res) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public function addLimitedAuctions($token, $data)
+    {
+        $this->checkTokensTable();
+        $this->checkAuctionsTable();
+        $res = $this->query(
+            "SELECT shop, creator FROM tokens WHERE token = '$token'",
+        );
+        if (count($res) == 0) {
+            return false;
+        }
+        $shopId = $res[0]["shop"];
+        $creator = $res[0]["creator"];
+
+        foreach ($data as $entry) {
+            $mil = $entry->timestamp;
+            $seconds = ceil($mil / 1000);
+            $timestamp = date("Y-m-d H:i:s", $seconds);
+            $this->query(
+                "INSERT IGNORE INTO auctions (
+                    item, 
+                    price, 
+                    shopId, 
+                    creator, 
+                    amount, 
+                    timeCreated,
+                    notMaintained, 
+                    reliable, 
+                    mostlyAvailable,
+                    identifier
+
+                ) VALUES (
+                    '$entry->item',
+                    '$entry->price', 
+                    '$shopId', 
+                    '$creator', 
+                    '$entry->amount', 
+                    '$timestamp',
+                    (SELECT defaultNotMaintained FROM shops WHERE id = '$shopId'),
+                    (SELECT defaultReliable FROM shops WHERE id = '$shopId'),
+                    (SELECT defaultMostlyAvailable FROM shops WHERE id = '$shopId'),
+                    '$entry->identifier'
+                 )",
+            );
+        }
+
+        $this->updateTrendingCache();
+        return true;
     }
 }

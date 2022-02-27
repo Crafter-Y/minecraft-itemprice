@@ -93,3 +93,45 @@
 		<a href="/admin/index/" class="btn w-full mt-4 text-lg">Cancel</a>
 	</form>
 </div>
+<div class="flex justify-center w-full flex-wrap pb-12">
+	<div
+		class="bg-gray-800 rounded-xl shadow-lg px-6 py-4 mt-12"
+	>
+		<h1 class="text-2xl font-semibold w-full text-center">
+			Configure Shop Tokens
+		</h1>
+		<table class="mt-2">
+			<?php foreach ($tokens as $row) { ?>
+				<tr>
+					<td><?php echo $row["token"]; ?></td>	
+					<td>
+						<form method="post">
+							<input 
+								type="hidden" 
+								name="token" 
+								value="<?php echo $row["token"]; ?>"
+							/>
+							<input
+								type="submit"
+								name="form4"
+								value="Delete"
+								class="btn btn-xs"
+							/>
+						</form>
+					</td>
+					
+				</tr>
+			<?php } ?>
+		</table>
+		<form
+			method="post"
+		>
+		<input
+			type="submit"
+			name="form3"
+			value="Add Token +"
+			class="w-full btn btn-info mt-4 text-lg"
+		/>
+		<a href="/admin/index/" class="btn w-full mt-4 text-lg">Cancel</a>
+		</div>
+</div>

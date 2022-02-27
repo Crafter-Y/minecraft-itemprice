@@ -50,7 +50,7 @@ npm run css
         -   [ ] newest
         -   [ ] lowest
 
--   [ ] Secured API to insert auctions
+-   [x] Secured API to insert auctions
 
 # Info
 

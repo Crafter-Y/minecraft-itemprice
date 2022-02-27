@@ -306,11 +306,25 @@ class AdminController extends AppController
             $this->redirect("admin/index");
         }
 
+        if (isset($this->params["form"]["form3"])) {
+            $this->Lifecycle->generateToken(
+                $shopId,
+                $this->Session->read("userId"),
+            );
+        }
+
+        if (isset($this->params["form"]["form4"])) {
+            $token = $this->params["form"]["token"];
+            $this->Lifecycle->deleteToken($token);
+        }
+
         $shop = $this->Lifecycle->getShop($shopId, false);
+        $tokens = $this->Lifecycle->getTokens($shopId);
         if (!$shop) {
             $this->redirect("admin/index");
         }
         unset($shop["auctions"]);
         $this->set("shop", $shop);
+        $this->set("tokens", $tokens);
     }
 }
