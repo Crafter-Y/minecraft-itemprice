@@ -279,6 +279,8 @@ class Lifecycle extends AppModel
         $this->query("DROP TABLE users");
         $this->query("DROP TABLE shop_schema");
         $this->query("DROP TABLE trending");
+        $this->query("DROP TABLE trendingincludinglimited");
+        $this->query("DROP TABLE tokens");
     }
 
     public function isDefaultUserAllowedToViewMainController()
