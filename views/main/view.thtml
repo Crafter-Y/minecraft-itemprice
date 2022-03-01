@@ -1,17 +1,186 @@
+<!-- Stylesheets for the Carousel -->
+<link rel="stylesheet" type="text/css" href="<?php echo $html->url(
+    "slick/slick.css",
+); ?>"/>
+<link rel="stylesheet" type="text/css" href="<?php echo $html->url(
+    "slick/slick-theme.css",
+); ?>"/>
+
 <div class="flex w-full justify-center flex-wrap">
+    <!-- Page Title -->
     <div class="flex mt-12 gap-4 items-center w-full justify-center">
-        <img id="img" src="" alt="<?php echo $item; ?>" height="96px" width="96px">
-        <h1 id="item" class="text-4xl font-semibold">
+        <img src="" alt="<?php echo $item; ?>" height="96px" width="96px" class="mcimage">
+        <h1 class="text-4xl font-semibold itemText">
             <?php echo $item; ?>
         </h1>
     </div>
 
+    <!-- Block if the Page has Limited Auctions -->
+    <?php if ($content["hasLimitedAuctions"]) { ?>
+        <script>
+            const limitedShops = <?php echo json_encode(
+                $content["limitedAuctions"],
+            ); ?>;
+            const stackSize = <?php echo $stacksize; ?>;
+        </script>
+        <h2 class="mt-12 w-full text-3xl font-semibold text-center">Limited Auctions</h2>
+        <small class="w-full text-sm text-center">Shops: <?php echo count(
+            $content["limitedAuctions"],
+        ); ?></small>
+
+        <!-- Auction Stats -->
+        <?php if ($content["auctionsInTimePeroid"]) { ?>
+            <div class="mt-6 bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex">
+                <div class="hidden md:block">
+                    <p class="text-center text-sm">Lowest</p>
+                    <p class="text-2xl text-center">Price per Piece</p>
+                    <p class="text-center my-4 text-3xl price">
+                        <?php echo $content["lowestAuctionPrice"][
+                            "pricePerPc"
+                        ]; ?>
+                    </p>
+                </div>
+                <div class="divider divider-vertical hidden md:flex"></div>
+                <div class="hidden md:block">
+                    <p class="text-center text-sm">Lowest</p>
+                    <p class="text-2xl text-center">Price per Stack (64)</p>
+                    <p class="text-center my-4 text-3xl price">
+                    <?php echo $content["lowestAuctionPrice"][
+                        "pricePerStack"
+                    ]; ?>
+                    </p>
+                </div>
+                <div class="divider divider-vertical hidden md:flex"></div>
+                <div>
+                    <p class="text-center text-sm">Avarage</p>
+                    <p class="text-2xl text-center">Price per Piece</p>
+                    <p class="text-center my-4 text-3xl price">
+                        <?php echo $content["averageAuctionPrice"]; ?>
+                    </p>
+                </div>
+                <div class="divider divider-vertical"></div>
+                <div>
+                    <p class="text-center text-sm">Avarage</p>
+                    <p class="text-2xl text-center">Price per Stack (64)</p>
+                    <p class="text-center my-4 text-3xl price">
+                        <?php echo $content["averageAuctionPricePerStack"]; ?>
+                    </p>
+                </div>
+            </div>
+        <?php } ?>
+
+        <!-- Per Limited Auction Shop -->
+        <?php foreach ($content["limitedAuctions"] as $shop => $auctions) { ?>
+            <h2 class="w-full px-6 text-3xl font-semibold mt-8"><?php echo $shop; ?></h2>
+            <?php if ($content["auctionsInTimePeroid"]) { ?>
+                <small class="w-full px-6 text-sm">Owner: <?php echo $auctions[0][
+                    "owner"
+                ]; ?> | <?php echo $auctions[0]["description"]; ?></small>
+            <?php } ?>
+            <!-- Carousel -->
+            <h2 class="w-full px-6 text-2xl mt-6">Recent Auctions</h2>
+
+            <div class="w-full mt-4">
+                <div class="bg-gray-800 mx-6 py-4 rounded-lg shadow-xl">
+                    
+                    <!-- Auctual Carousel Element -->
+                    <div class="slider mx-12">
+                        <?php foreach ($auctions as $auction) { ?>
+                            <div class="flex flex-wrap">
+                                <div class="bg-gray-600 mx-3 px-4 py-2 rounded-lg shadow-xl">
+                                    <div class="w-full flex justify-center">
+                                        <img 
+                                            src="" 
+                                            alt="<?php echo $item; ?>"
+                                            height="96px" 
+                                            width="96px"
+                                            class="mcimage"
+                                        >
+                                    </div>
+                                    <p class="w-full text-center text-xl price"><?php echo $auction[
+                                        "price"
+                                    ]; ?></p>
+                                    <p class="w-full text-center text-xl"><?php echo $auction[
+                                        "amount"
+                                    ]; ?> pcs.</p>
+
+                                    <p class="w-full text-sm text-right mt-2 timeDifference"><?php echo $auction[
+                                        "timeCreated"
+                                    ]; ?></p>
+                                </div>
+                                
+
+                            </div>
+                        <?php } ?>
+                        <?php if (!$content["auctionsInTimePeroid"]) { ?>
+                            <h2 class="text-2xl font-semibold">No Auctions in this Time peroid</h2>
+                        <?php } ?>
+                    </div>
+                </div>    
+            </div>
+            <div class="w-full px-6 flex flex-wrap justify-end items-center gap-2 mt-1">
+                <?php echo $this->renderElement("timeperoidselector"); ?>
+            </div>
+            <?php if ($content["auctionsInTimePeroid"]) { ?>       
+                <div class="w-full px-[10%] flex justify-end items-center gap-2 mt-6">
+                    <p class="text-lg">Stack size</p>
+                    <?php if ($stacksize == "1") { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/1">
+                            <button class="btn btn-sm btn-info">1</button>
+                        </a>
+                    <?php } else { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/1">
+                            <button class="btn btn-sm">1</button>
+                        </a>
+                    <?php } ?>
+
+                    <?php if ($stacksize == "16") { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/16">
+                            <button class="btn btn-sm btn-info">16</button>
+                        </a>
+                    <?php } else { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/16">
+                            <button class="btn btn-sm">16</button>
+                        </a>
+                    <?php } ?>
+
+                    <?php if ($stacksize == "64") { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/64">
+                            <button class="btn btn-sm btn-info">64</button>
+                        </a>
+                    <?php } else { ?>
+                        <a href="/main/view/<?php echo $item; ?>/<?php echo $period; ?>/64">
+                            <button class="btn btn-sm">64</button>
+                        </a>
+                    <?php } ?>
+                </div>
+                <div class="w-full px-[10%] mt-1">
+                    <canvas id="chart-<?php echo $auctions[0][
+                        "shopId"
+                    ]; ?>" class="bg-slate-300 rounded-xl shadow-lg"></canvas>
+                </div>
+
+                <div class="w-full px-[10%] flex flex-wrap justify-end items-center gap-2 mt-1 mb-6">
+                    <?php echo $this->renderElement("timeperoidselector"); ?>
+                </div>
+            <?php } ?>
+    <?php }} ?>
+
+    <!-- Subtitle if the Page has Normal Auctions and Limited Actuons -->
+    <?php if ($content["hasAuctions"] && $content["hasLimitedAuctions"]) { ?>
+    <h2 class="w-full text-center text-3xl font-semibold mt-6">Auctions</h2>
+    <?php } ?>
+
+    <!-- Block if the Page has Normal Auctions -->
+
+    <!-- Statistics for normal Auctions -->
+    <?php if ($content["hasAuctions"]) { ?>
     <div class="mt-6 bg-gray-800 rounded-xl shadow-lg px-6 py-4 flex">
         <div class="hidden md:block">
             <p class="text-center text-sm">Lowest</p>
             <p class="text-2xl text-center">Price per Piece</p>
             <p class="text-center my-4 text-3xl price">
-                <?php echo $content["data"][0]["pricePerPc"]; ?>
+                <?php echo $content["auctions"][0]["pricePerPc"]; ?>
             </p>
         </div>
         <div class="divider divider-vertical hidden md:flex"></div>
@@ -19,7 +188,7 @@
             <p class="text-center text-sm">Lowest</p>
             <p class="text-2xl text-center">Price per Stack (64)</p>
             <p class="text-center my-4 text-3xl price">
-                <?php echo $content["data"][0]["pricePerStack"]; ?>
+                <?php echo $content["auctions"][0]["pricePerStack"]; ?>
             </p>
         </div>
         <div class="divider divider-vertical hidden md:flex"></div>
@@ -39,21 +208,23 @@
             </p>
         </div>
     </div>
+
+    <!-- Table with normal Auctions -->
     <div class="w-full flex justify-center mt-4 pb-10 md:overflow-auto">
-            <table class="table table-zebra">
-                <thead>
-                    <tr>
-                        <th class="text-lg">Original Price</th> 
-                        <th class="text-lg hidden lg:table-cell">Price per Piece</th> 
-                        <th class="text-lg hidden lg:table-cell">Price per Stack (64)</th> 
-                        <th class="text-lg hidden md:table-cell">Shop</th> 
-                        <th class="text-lg hidden xl:table-cell">Shop Owner</th> 
-                        <th class="text-lg hidden sm:table-cell">Shop Description</th> 
-                        <th class="text-lg">State</th> 
-                    </tr>
-                </thead> 
-                <tbody id="table">
-                    <?php foreach ($content["data"] as $row) { ?>
+        <table class="table table-zebra">
+            <thead>
+                <tr>
+                    <th class="text-lg">Original Price</th> 
+                    <th class="text-lg hidden lg:table-cell">Price per Piece</th> 
+                    <th class="text-lg hidden lg:table-cell">Price per Stack (64)</th> 
+                    <th class="text-lg hidden md:table-cell">Shop</th> 
+                    <th class="text-lg hidden xl:table-cell">Shop Owner</th> 
+                    <th class="text-lg hidden sm:table-cell">Shop Description</th> 
+                    <th class="text-lg">State</th> 
+                </tr>
+            </thead> 
+            <tbody id="table">
+                <?php foreach ($content["auctions"] as $row) { ?>
                     <tr>
                         <td class="text-lg">
                             <div class="flex gap-2">
@@ -78,6 +249,8 @@
                         <td class="text-lg hidden sm:table-cell">
                             <?php echo $row["description"]; ?>
                         </td>  
+
+                        <!-- Badges -->
                         <td class="text-lg">
                             <div class="flex flex-wrap w-min gap-1">
                             <?php if ($row["notMaintained"]) { ?>
@@ -94,10 +267,16 @@
                             </div> 
                         </td> 
                     </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
-
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <?php } ?>
 </div>
-<script src="/js/view.js"></script>
+<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/slick/slick.min.js"></script>
+<script type="text/javascript" src="/chartjs/chart.min.js"></script>
+
+<script type="text/javascript" src="/js/view.js"></script>
+<script type="text/javascript" src="/js/format.js"></script>
+<script type="text/javascript" src="/js/charts.js"></script>

@@ -1,0 +1,40 @@
+<p class="text-lg">Time period</p>
+<?php if ($period == "alltime") { ?>
+    <a href="/main/view/<?php echo $item; ?>/alltime/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm btn-info">All Time</button>
+    </a>
+<?php } else { ?>
+    <a href="/main/view/<?php echo $item; ?>/alltime/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm">All Time</button>
+    </a>
+<?php } ?>
+
+<?php if ($period == "lastyear") { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastyear/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm btn-info">Last Year</button>
+    </a>
+<?php } else { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastyear/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm">Last Year</button>
+    </a>
+<?php } ?>
+
+<?php if ($period == "lastmonth") { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastmonth/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm btn-info">Last Month</button>
+    </a>
+<?php } else { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastmonth/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm">Last Month</button>
+    </a>
+<?php } ?>
+
+<?php if ($period == "lastday") { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastday/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm btn-info">Last Day</button>
+    </a>
+<?php } else { ?>
+    <a href="/main/view/<?php echo $item; ?>/lastday/<?php echo $stacksize; ?>">
+        <button class="btn btn-sm">Last Day</button>
+    </a>
+<?php } ?>

@@ -126,13 +126,31 @@ class MainController extends AppController
         $this->redirect("main/index");
     }
 
-    public function view($itemName = false)
-    {
+    public function view(
+        $itemName = false,
+        $period = "lastmonth",
+        $stacksize = "64"
+    ) {
+        if (
+            $period != "alltime" &&
+            $period != "lastyear" &&
+            $period != "lastmonth" &&
+            $period != "lastday"
+        ) {
+            $period = "alltime";
+        }
+        $this->set("period", $period);
+
+        if ($stacksize != "64" && $stacksize != "16" && $stacksize != "1") {
+            $stacksize = "64";
+        }
+        $this->set("stacksize", $stacksize);
+
         if (!$itemName) {
             $this->redirect("main/index");
         }
         $this->set("item", $itemName);
-        $content = $this->Lifecycle->getView($itemName);
+        $content = $this->Lifecycle->getView($itemName, $period);
         if (!$content["ok"]) {
             $this->redirect("main/index");
         }

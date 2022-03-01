@@ -42,13 +42,7 @@ npm run css
 
 -   [x] implement labels
 -   [x] include lowest auction price in main/index
--   [ ] include auctions in main/view
-
-    -   [ ] slideshow
-    -   [ ] filter options
-
-        -   [ ] newest
-        -   [ ] lowest
+-   [x] include auctions in main/view
 
 -   [x] Secured API to insert auctions
 
@@ -61,6 +55,18 @@ Got the datalist from [PrismarineJS/minecraft-assets](https://github.com/Prismar
 [texture_content.json](https://github.com/PrismarineJS/minecraft-assets/blob/master/data/1.18.1/texture_content.json)
 
 I removed duplicate entrys that are not needed for my application.
+
+## webroot/slick
+
+I'm using [slick][https://kenwheeler.github.io/slick/] by [Ken Wheeler][http://kenwheeler.github.io/] to build my carousel in views/main/view.thtml
+
+[Github Page][https://github.com/kenwheeler/slick/]
+
+## webroot/chartjs
+
+I'm using [Chart.js][https://www.chartjs.org/] to build the charts in views/main/view.thtml
+
+[Github Page][https://github.com/chartjs/chart.js]
 
 # Contribute
 

@@ -54,14 +54,17 @@
                         alt="<?php echo $item["item"]; ?>" 
                         height="128px" 
                         width="128px"
+                        class="mcimage"
                     >
                 </div>
-                <p class="text-lg text-center"><?php echo $item["item"]; ?></p>
-                <p class="text-lg text-center">
+                <p class="text-lg text-center itemText"><?php echo $item[
+                    "item"
+                ]; ?></p>
+                <p class="text-lg text-center price">
                     <?php echo $item["minPrice"]; ?>
                 </p>
             </a>
         <?php } ?>
     </div>
 </div>
-<script src="/js/homeScreen.js"></script>
+<script src="/js/format.js"></script>

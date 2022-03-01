@@ -323,7 +323,6 @@ class AdminController extends AppController
         if (!$shop) {
             $this->redirect("admin/index");
         }
-        unset($shop["auctions"]);
         $this->set("shop", $shop);
         $this->set("tokens", $tokens);
     }

@@ -97,7 +97,8 @@ class Lifecycle extends AppModel
             $this->query("CREATE TABLE trending (
                 item VARCHAR(64) NOT NULL,
                 count INT NOT NULL,
-                minPrice DOUBLE(20, 2) NOT NULL
+                minPrice DOUBLE(20, 2) NOT NULL,
+                UNIQUE (item)
             )");
         }
     }
@@ -109,7 +110,8 @@ class Lifecycle extends AppModel
             $this->query("CREATE TABLE trendingIncludingLimited (
                 item VARCHAR(64) NOT NULL,
                 count INT NOT NULL,
-                minPrice DOUBLE(20, 2) NOT NULL
+                minPrice DOUBLE(20, 2) NOT NULL,
+                UNIQUE (item)
             )");
         }
     }
@@ -327,7 +329,7 @@ class Lifecycle extends AppModel
         );
         foreach ($res as $entry) {
             $this->query(
-                "INSERT INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
+                "INSERT IGNORE INTO trending (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
             );
         }
 
@@ -341,7 +343,7 @@ class Lifecycle extends AppModel
         );
         foreach ($res as $entry) {
             $this->query(
-                "INSERT INTO trendingIncludingLimited (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
+                "INSERT IGNORE INTO trendingIncludingLimited (item, count, minPrice) VALUES ('$entry[item]', '$entry[count]', '$entry[minPrice]')",
             );
         }
     }
@@ -462,7 +464,7 @@ class Lifecycle extends AppModel
         };
     }
 
-    public function getView($itemName)
+    public function getView($itemName, $period)
     {
         $returner = ["ok" => true];
 
@@ -474,11 +476,12 @@ class Lifecycle extends AppModel
                 auctions.notMaintained, 
                 auctions.reliable, 
                 auctions.mostlyAvailable, 
+                auctions.timeCreated, 
 
                 shops.name, 
                 shops.description, 
                 shops.owner, 
-                shops.isLimited 
+                shops.isLimited
             FROM auctions 
             JOIN shops ON auctions.shopId = shops.id 
             WHERE item = '$itemName'",
@@ -489,17 +492,100 @@ class Lifecycle extends AppModel
         }
 
         $sumPerPc = 0;
+        $auctionSumPerPc = 0;
+        $auctionCount = 0;
         $sumPerStack = 0;
+        $lowestAuction = null;
+        $auctions = [];
+        $limitedAuctions = [];
         foreach ($res as $key => $row) {
             $res[$key]["pricePerPc"] = $row["price"] / $row["amount"];
             $res[$key]["pricePerStack"] = ($row["price"] / $row["amount"]) * 64;
-            $sumPerPc += $res[$key]["pricePerPc"];
-            $sumPerStack += $res[$key]["pricePerStack"];
+            $res[$key]["timeCreated"] =
+                DateTime::createFromFormat(
+                    "Y-m-d H:i:s",
+                    $row["timeCreated"],
+                )->getTimestamp() * 1000;
+            if (!$row["isLimited"]) {
+                $sumPerPc += $res[$key]["pricePerPc"];
+                $sumPerStack += $res[$key]["pricePerStack"];
+                array_push($auctions, $res[$key]);
+            } else {
+                $auctionSumPerPc += $res[$key]["pricePerPc"];
+                $auctionCount++;
+                if (
+                    !$lowestAuction ||
+                    $lowestAuction["pricePerPc"] > $res[$key]["pricePerPc"]
+                ) {
+                    $lowestAuction = $res[$key];
+                }
+                if (!isset($limitedAuctions[$row["name"]])) {
+                    $limitedAuctions[$row["name"]] = [];
+                }
+                array_push($limitedAuctions[$row["name"]], $res[$key]);
+            }
         }
-        usort($res, $this->cmp_pricePerPc("key_b"));
-        $returner["data"] = $res;
-        $returner["sumPerPc"] = $sumPerPc / count($res);
-        $returner["sumPerStack"] = $sumPerStack / count($res);
+        usort($auctions, $this->cmp_pricePerPc("key_b"));
+
+        foreach ($limitedAuctions as $shop => $theseAuctions) {
+            usort($theseAuctions, function ($a, $b) {
+                return $a["timeCreated"] < $b["timeCreated"];
+            });
+            $limitedAuctions[$shop] = $theseAuctions;
+        }
+
+        $returner["auctions"] = $auctions;
+        $returner["limitedAuctions"] = $limitedAuctions;
+
+        if (count($auctions)) {
+            $returner["hasAuctions"] = true;
+            $returner["sumPerPc"] = $sumPerPc / count($auctions);
+            $returner["sumPerStack"] = $sumPerStack / count($auctions);
+        } else {
+            $returner["hasAuctions"] = false;
+        }
+
+        if (count($limitedAuctions)) {
+            $returner["hasLimitedAuctions"] = true;
+            if ($period == "alltime") {
+                $returner["auctionsInTimePeroid"] = true;
+                return $returner;
+            }
+            $now = date_create()->getTimestamp() * 1000;
+            if ($period == "lastyear") {
+                $now = $now - 31557600000;
+            } elseif ($period == "lastmonth") {
+                $now = $now - 2629800000;
+            } elseif ($period == "lastday") {
+                $now = $now - 86400000;
+            }
+
+            $newLimitedAuctions = [];
+            $empty = true;
+            foreach ($limitedAuctions as $shop => $theseAuctions) {
+                foreach ($theseAuctions as $auction) {
+                    if (!isset($newLimitedAuctions[$shop])) {
+                        $newLimitedAuctions[$shop] = [];
+                    }
+                    if ($auction["timeCreated"] > $now) {
+                        $empty = false;
+                        array_push($newLimitedAuctions[$shop], $auction);
+                    }
+                }
+            }
+            if ($empty) {
+                $returner["auctionsInTimePeroid"] = false;
+            } else {
+                $returner["auctionsInTimePeroid"] = true;
+            }
+            $returner["averageAuctionPrice"] = $auctionSumPerPc / $auctionCount;
+            $returner["averageAuctionPricePerStack"] =
+                ($auctionSumPerPc / $auctionCount) * 64;
+            $returner["lowestAuctionPrice"] = $lowestAuction;
+            $returner["limitedAuctions"] = $newLimitedAuctions;
+        } else {
+            $returner["hasLimitedAuctions"] = false;
+        }
 
         return $returner;
     }
@@ -544,7 +630,7 @@ class Lifecycle extends AppModel
     public function generateToken($shopId, $userId)
     {
         $this->checkTokensTable();
-        $token = bin2hex(random_bytes(24));
+        $token = bin2hex(random_bytes(12));
 
         $this->query(
             "INSERT INTO tokens (token, shop, creator) VALUES ('$token', '$shopId', '$userId')",

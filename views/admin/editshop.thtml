@@ -5,9 +5,9 @@
     <h2 class="w-full text-center text-lg">
         <?php echo $shop["description"]; ?>
     </h2>
-    <p class="w-full text-center text-sm">Inhaber: 
+    <p class="w-full text-center text-sm">Owner: 
         <?php echo $shop["owner"]; ?> 
-        | Erstellt von: 
+        | Created by: 
         <?php echo $shop["username"]; ?>
     </p>
 
@@ -95,19 +95,25 @@
                 <tbody id="table">
                     <?php foreach ($shop["auctions"] as $auction) { ?>
                     <tr>
-                        <td></td> 
-                        <td class="text-lg"><?php echo $auction[
+                        <td>
+                        <img src="" alt="<?php echo $auction[
+                            "item"
+                        ]; ?>" height="32px" width="32px" class="mcimage">
+                        </td> 
+                        <td class="text-lg itemText"><?php echo $auction[
                             "item"
                         ]; ?></td> 
                         <td class="text-lg"><?php echo $auction[
                             "amount"
                         ]; ?></td> 
-                        <td class="text-lg"><?php echo $auction[
+                        <td class="text-lg price"><?php echo $auction[
                             "price"
                         ]; ?></td>
-                        <td class="text-lg"><?php echo $auction["price"] /
+                        <td class="text-lg price"><?php echo $auction["price"] /
                             $auction["amount"]; ?></td>
-                        <td class="text-lg"><?php echo ($auction["price"] /
+                        <td class="text-lg price"><?php echo ($auction[
+                            "price"
+                        ] /
                             $auction["amount"]) *
                             64; ?></td>
                         <td>
@@ -162,3 +168,4 @@
     <?php } ?>
 </div>
 <script src="/js/selectList.js"></script>
+<script src="/js/format.js"></script>

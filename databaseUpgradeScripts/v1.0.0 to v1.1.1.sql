@@ -20,3 +20,5 @@ ALTER TABLE auctions ADD COLUMN unique_md5 CHAR(32) AS
     )
 );
 ALTER TABLE auctions ADD UNIQUE (unique_md5);
+
+ALTER TABLE trending ADD UNIQUE (item);
