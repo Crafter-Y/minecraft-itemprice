@@ -30,21 +30,14 @@ npm i
 npm run css
 ```
 
-# TODO for v1.1.0
+# TODOs
 
--   [x] Edit the auction structure to include:
+-   [ ] A more efficient way to update the trending data
+-   [ ] Fix the main/index search functionality. 
 
-    -   [x] Creation Time/Date
-    -   [x] "not maintained" label
-    -   [x] "reliable" label
-    -   [x] "mostly available" label
-    -   [x] Default labels for shops
+    - Issue: Search Input: wool
+    - Error: White wool is not showing up
 
--   [x] implement labels
--   [x] include lowest auction price in main/index
--   [x] include auctions in main/view
-
--   [x] Secured API to insert auctions
 
 # Info
 
