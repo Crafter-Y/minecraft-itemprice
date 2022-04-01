@@ -19,7 +19,7 @@ function formatDaysSince(timeInMs) {
 
     let msInDay = 24 * 60 * 60 * 1000;
 
-    let diff = (today - input) / msInDay
+    let diff = Math.floor((today - input) / msInDay) 
     let out = "";
     switch (diff) {
         case 0:
